@@ -5,7 +5,7 @@
         "pid": "0xECAD",
         "device_version": "0.0.1"
     }
-    "keyboard_name": "Clover Onekey",
+    "keyboard_name": "Clover Onekey Split",
     "processor": "RP2040",
     "bootloader": "rp2040",
     "features": {
@@ -15,23 +15,31 @@
         "console": false,
         "command": false,
         "nkro": false,
-        "backlight": true,
+        "backlight": false,
         "rgblight": false,
         "audio": false
     },
     "matrix_pins": {
-        "direct": [["GP0"]]
+        "direct": [["GP2"]]
     },
-    "backlight": {
-        "pin": "GP15"
+    "split": {
+        "enabled": true,
+        "main": "left",
+        "matrix_pins": {
+            "right": {
+                "direct": [["GP2"]]
+            }
+        }
+        "soft_serial_pin": "GP0",
+        "transport": {
+            "protocol": "serial"
+        }
     },
-    "rgblight": {
-        "pin": "GP16"
-    }
     "layouts": {
         "LAYOUT_ortho_1x1": {
             "layout": [
-                {"x": 0, "y": 0, "matrix": [0, 0]}
+                {"x": 0, "y": 0, "matrix": [0, 0]},
+                {"x": 0, "y": 0, "matrix": [1, 0]}
             ]
         }
     }
