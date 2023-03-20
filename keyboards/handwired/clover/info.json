@@ -4,7 +4,7 @@
         "vid": "0xACED",
         "pid": "0xECAD",
         "device_version": "0.0.1"
-    }
+    },
     "keyboard_name": "Clover Onekey Split",
     "processor": "RP2040",
     "bootloader": "rp2040",
@@ -21,7 +21,7 @@
         "audio": false
     },
     "matrix_pins": {
-        "cols": ["GP2","GP3","GP4","GP5","GP6"]
+        "cols": ["GP2","GP3","GP4","GP5","GP6"],
         "rows": ["GP7","GP8","GP9","GP10","GP11"]
     },
     "split": {
@@ -29,29 +29,28 @@
         "main": "left",
         "matrix_pins": {
             "right": {
-                "cols": ["GP2","GP3","GP4","GP5","GP6"]
+                "cols": ["GP2","GP3","GP4","GP5","GP6"],
                 "rows": ["GP7","GP8","GP9","GP10","GP11"]
             }
-        }
+        },
         "soft_serial_pin": "GP0",
         "transport": {
             "protocol": "serial"
         }
     },
     "layouts": {
-        "LAYOUT_c_tractyl": {
+        "LAYOUT": {
             "layout": [
                 {"label": "y", "x": 0, "y": 0, "matrix": [0, 0]},
                 {"label": "c", "x": 1, "y": 0, "matrix": [0, 1]},
                 {"label": "l", "x": 2, "y": 0, "matrix": [0, 2]},
                 {"label": "m", "x": 3, "y": 0, "matrix": [0, 3]},
                 {"label": "k", "x": 4, "y": 0, "matrix": [0, 4]},
-                {"label": "z", "x": 0, "y": 0, "matrix": [0, 5]},
+                {"label": "z", "x": 0, "y": 0, "matrix": [5, 0]},
                 {"label": "f", "x": 1, "y": 0, "matrix": [5, 1]},
                 {"label": "u", "x": 2, "y": 0, "matrix": [5, 2]},
                 {"label": ",", "x": 3, "y": 0, "matrix": [5, 3]},
                 {"label": "'", "x": 4, "y": 0, "matrix": [5, 4]},
-
                 {"label": "i", "x": 0, "y": 1, "matrix": [1, 0]},
                 {"label": "s", "x": 1, "y": 1, "matrix": [1, 1]},
                 {"label": "r", "x": 2, "y": 1, "matrix": [1, 2]},
@@ -62,7 +61,6 @@
                 {"label": "e", "x": 2, "y": 1, "matrix": [6, 2]},
                 {"label": "a", "x": 3, "y": 1, "matrix": [6, 3]},
                 {"label": "o", "x": 4, "y": 1, "matrix": [6, 4]},
-
                 {"label": "q", "x": 0, "y": 1, "matrix": [2, 0]},
                 {"label": "v", "x": 1, "y": 1, "matrix": [2, 1]},
                 {"label": "w", "x": 2, "y": 1, "matrix": [2, 2]},
@@ -71,18 +69,16 @@
                 {"label": "b", "x": 0, "y": 1, "matrix": [7, 0]},
                 {"label": "h", "x": 1, "y": 1, "matrix": [7, 1]},
                 {"label": "/", "x": 2, "y": 1, "matrix": [7, 2]},
-                {"label": ".", "x": 3, "y": 1, "matrix": [7, 4]},
-                {"label": "x", "x": 4, "y": 1, "matrix": [7, 5]},
-
+                {"label": ".", "x": 3, "y": 1, "matrix": [7, 3]},
+                {"label": "x", "x": 4, "y": 1, "matrix": [7, 4]},
                 {"x": 0, "y": 1, "matrix": [3, 0]},
                 {"x": 1, "y": 1, "matrix": [3, 1]},
                 {"x": 2, "y": 1, "matrix": [3, 2]},
                 {"x": 3, "y": 1, "matrix": [3, 3]},
                 {"x": 1, "y": 1, "matrix": [8, 1]},
                 {"x": 2, "y": 1, "matrix": [8, 2]},
-                {"x": 3, "y": 1, "matrix": [8, 4]},
-                {"x": 4, "y": 1, "matrix": [8, 5]},
-
+                {"x": 3, "y": 1, "matrix": [8, 3]},
+                {"x": 4, "y": 1, "matrix": [8, 4]},
                 {"x": 1, "y": 1, "matrix": [4, 1]},
                 {"x": 2, "y": 1, "matrix": [4, 2]},
                 {"x": 3, "y": 1, "matrix": [4, 3]},
@@ -90,7 +86,7 @@
                 {"x": 0, "y": 1, "matrix": [9, 0]},
                 {"x": 1, "y": 1, "matrix": [9, 1]},
                 {"x": 2, "y": 1, "matrix": [9, 2]},
-                {"x": 3, "y": 1, "matrix": [9, 4]}
+                {"x": 3, "y": 1, "matrix": [9, 3]}
             ]
         }
     }
