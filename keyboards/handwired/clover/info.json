@@ -5,17 +5,17 @@
         "pid": "0xECAD",
         "device_version": "0.0.1"
     },
-    "keyboard_name": "Clover Onekey Split",
+    "keyboard_name": "Clover Split",
     "processor": "RP2040",
     "bootloader": "rp2040",
     "diode_direction": "COL2ROW",
     "features": {
         "bootmagic": false,
-        "mousekey": false,
+        "mousekey": true,
         "extrakey": true,
-        "console": false,
+        "console": true,
         "command": false,
-        "nkro": false,
+        "nkro": true,
         "backlight": false,
         "rgblight": false,
         "audio": false
@@ -26,7 +26,7 @@
     },
     "split": {
         "enabled": true,
-        "main": "left",
+        "main": "eeprom",
         "matrix_pins": {
             "right": {
                 "cols": ["GP2","GP3","GP4","GP5","GP6"],
@@ -74,8 +74,6 @@
                 {"x": 0, "y": 1, "matrix": [3, 0]},
                 {"x": 1, "y": 1, "matrix": [3, 1]},
                 {"x": 2, "y": 1, "matrix": [3, 2]},
-                {"x": 3, "y": 1, "matrix": [3, 3]},
-                {"x": 1, "y": 1, "matrix": [8, 1]},
                 {"x": 2, "y": 1, "matrix": [8, 2]},
                 {"x": 3, "y": 1, "matrix": [8, 3]},
                 {"x": 4, "y": 1, "matrix": [8, 4]},
