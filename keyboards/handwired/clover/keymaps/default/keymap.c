@@ -1,5 +1,3 @@
-// Copyright 2020 QMK
-// SPDX-License-Identifier: GPL-2.0-or-later
 #include QMK_KEYBOARD_H
 
 enum custom_layers {
@@ -10,17 +8,15 @@ enum custom_layers {
   _MOUSE
 };
 
-#ifdef OLED_ENABLE
-bool oled_task_user(void) {
-    // Host Keyboard Layer Status
-    oled_write_P(PSTR("Layer: "), false);
-    oled_write_P(PSTR(get_highest_layer(layer_state)), false);
-    oled_write_P(PSTR("\n"));
-    
-    return false;
-}
-#endif
+static const char * const custom_layer_names[] = {
+	[_ISRT] = "ISRT",
+	[_NUM] = "Num",
+	[_SYM] = "Symbols",
+	[_NAV] = "Nav",
+  [_MOUSE] = "Mouse"
+};
 
+#ifdef OLED_ENABLE
 static void render_logo(void) {
     static const char PROGMEM qmk_logo[] = {
         0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F, 0x90, 0x91, 0x92, 0x93, 0x94,
@@ -32,12 +28,21 @@ static void render_logo(void) {
 }
 
 bool oled_task_user(void) {
-    render_logo();
+    if (is_keyboard_master()) {
+      // Host Keyboard Layer Status
+      oled_write_P(PSTR("Layer: "), false);
+      oled_write_P(PSTR(custom_layer_names[get_highest_layer(layer_state)]), false);
+      oled_write_P(PSTR("\n"), false);
+    } else {
+      render_logo();
+    }
+    
     return false;
 }
+#endif
 
 void pointing_device_init_user(void) {
-    set_auto_mouse_enable(true);         // always required before the auto mouse feature will work
+  set_auto_mouse_enable(true);         // always required before the auto mouse feature will work
 }
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -82,7 +87,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_ENT
                    ),
   [_NUM] = LAYOUT(
-      TO(3),
+      KC_NO,
       KC_PDOT,
       KC_PSLS,
       KC_PMNS,
@@ -91,7 +96,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_PPLS,
       KC_PAST,
       KC_PEQL,
-      TO(4),
+      KC_NO,
       KC_9,
       KC_7,
       KC_5,
@@ -112,7 +117,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_F4,
       KC_F6,
       KC_F8,
-      KC_TAB,
+      KC_TRNS,
       TO(0),
       KC_TRNS,
       KC_TRNS,
@@ -146,13 +151,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_NO,
       KC_PIPE,
       KC_NUHS,
-      KC_NO,
-      KC_NO,
+      TO(4),
+      TO(3),
       KC_NUBS,
       KC_QUES,
       KC_NO,
       KC_NO,
-      KC_BSPC,
+      KC_TRNS,
       TO(0),
       KC_TRNS,
       KC_TRNS,
@@ -166,8 +171,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_NO,
       KC_UP,
       KC_HOME,
-      KC_SCLN,
-      KC_ASTR,
+      KC_NO,
+      KC_NO,
       KC_PGUP,
       KC_NO,
       KC_NO,
@@ -176,8 +181,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_LEFT,
       KC_DOWN,
       KC_RGHT,
-      KC_SLSH,
-      KC_NUHS,
+      KC_TAB,
+      KC_NO,
       KC_LEFT,
       KC_UP,
       KC_DOWN,
@@ -186,13 +191,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_NO,
       KC_NO,
       KC_END,
-      KC_NO,
-      KC_NO,
+      KC_TRNS,
+      KC_TRNS,
       KC_PGDN,
       KC_NO,
       KC_NO,
       KC_NO,
-      KC_BSPC,
+      KC_TRNS,
       TO(0),
       KC_TRNS,
       KC_TRNS,
@@ -226,13 +231,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_NO,
       KC_NO,
       KC_NO,
-      KC_NO,
-      KC_NO,
+      KC_TRNS,
+      KC_TRNS,
       KC_MS_U,
       KC_MS_L,
       KC_MS_R,
       KC_MS_D,
-      KC_BSPC,
+      KC_TRNS,
       TO(0),
       KC_TRNS,
       KC_TRNS,
