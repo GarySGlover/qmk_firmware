@@ -193,8 +193,39 @@ tap_dance_action_t tap_dance_actions[] = {
     [CT_DOT] = ACTION_TAP_DANCE_TAP_HOLD(KC_DOT, KC_X),
     [CT_X] = ACTION_TAP_DANCE_TAP_HOLD(KC_X, KC_X),
 
-    [CT_TAB] = ACTION_TAP_DANCE_TAP_HOLD(KC_X, QK_CAPS_WORD_TOGGLE),
+    [CT_TAB] = ACTION_TAP_DANCE_TAP_HOLD(KC_TAB, QK_CAPS_WORD_TOGGLE),
 };
+
+bool caps_word_press_user(uint16_t keycode) {
+    switch (keycode) {
+        // Keycodes that continue Caps Word, with shift applied.
+        case KC_A ... KC_Z:
+        case KC_MINS:
+        case TD(CT_Y) ... TD(CT_TAB):
+            add_weak_mods(MOD_BIT(KC_LSFT));  // Apply shift to next key.
+            return true;
+
+        // Keycodes that continue Caps Word, without shifting.
+        case KC_1 ... KC_0:
+        case KC_BSPC:
+        case KC_DEL:
+        case KC_UNDS:
+            return true;
+
+        default:
+            return false;  // Deactivate Caps Word.
+    }
+}
+
+const uint16_t PROGMEM left_reset_combo[] = {KC_WH_U, KC_WH_D, KC_TAB, COMBO_END};
+const uint16_t PROGMEM right_reset_combo[] = {KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, COMBO_END};
+
+combo_t key_combos[COMBO_COUNT] = {
+    COMBO(left_reset_combo, QK_BOOT),
+    COMBO(right_reset_combo, QK_BOOT),
+};
+
+
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ISRT] = LAYOUT(
@@ -207,7 +238,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       TD(CT_Q),        TD(CT_V),        TD(CT_W),        TD(CT_D),        TD(CT_J),
       TD(CT_B),        TD(CT_H),        TD(CT_SLSH),     TD(CT_DOT),      TD(CT_X),
 
-      KC_WH_U,         KC_WH_D,         TD(CT_TAB),
+      KC_WH_U,         KC_WH_D,         KC_TAB,
       KC_MS_BTN1,      KC_MS_BTN2,      KC_MS_BTN3,
       
       KC_BSPC,         KC_SPC,          OSM(MOD_LSFT),   OSM(MOD_LALT),
