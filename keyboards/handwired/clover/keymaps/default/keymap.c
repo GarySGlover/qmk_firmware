@@ -61,13 +61,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_NO,         KC_NO,         KC_NO,      KC_NO,      KC_NO,      KC_NO,
       KC_BSPC,         LT(_MOUSE, KC_SPC), KC_NO,        KC_NO,      OSM(MOD_LGUI),   KC_NO,           LT(_MOUSE, KC_TAB), KC_ENT
                    ),
-  [_NUM2] = LAYOUT(
+  [_NUM] = LAYOUT(
                    MT(MOD_LALT, UK_GRV), MT(MOD_LCTL, UK_SCLN), MT(MOD_LSFT, UK_COLN), UK_LCBR, UK_RCBR,                   UK_PLUS, UK_7, MT(MOD_RSFT, UK_8),  MT(MOD_RCTL, UK_9), MT(MOD_LALT, UK_SLSH),
                    UK_TILD, UK_BSLS, UK_UNDS, UK_LPRN, UK_RPRN,                   UK_EQL, UK_4, UK_5, UK_6, UK_0,                   UK_NOT, UK_PIPE, UK_HASH, UK_LBRC, UK_RBRC,                   UK_MINS, UK_1, UK_2, UK_3, UK_ASTR,
                    KC_TRNS, KC_TRNS, KC_TRNS,                   KC_TRNS, KC_TRNS, KC_TRNS,
                    KC_TRNS,         KC_TRNS,         KC_TRNS,         KC_TRNS,                   KC_TRNS,         KC_TRNS,         KC_TRNS,         KC_TRNS
                    ),
-  [_NUM] = LAYOUT(
+  [_NUMOLD] = LAYOUT(
       KC_NO,           KC_PDOT,         KC_PSLS,         KC_PMNS,         KC_F12,      KC_F12,          KC_PPLS,         KC_PAST,         KC_PEQL,         KC_NO,
             KC_9,            KC_7,            KC_5,            KC_3,            KC_1,      KC_0,            KC_2,            KC_4,            KC_6,            KC_8,
             KC_F9,           MT(MOD_LALT, KC_F7), MT(MOD_LCTL, KC_F5), MT(MOD_LSFT, KC_F3), KC_F1,      KC_F10,          MT(MOD_RSFT, KC_F2), MT(MOD_RCTL, KC_F4), MT(MOD_LALT, KC_F6),  KC_F8,
