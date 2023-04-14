@@ -4,7 +4,6 @@
 enum custom_layers {
   _ISRT,
   _NUM,
-  _NUMOLD,
   _NAV,
   _SYM,
   _MOUSE,
@@ -14,7 +13,6 @@ enum custom_layers {
 static const char * const custom_layer_names[] = {
 	[_ISRT] = "ISRT",
 	[_NUM] = "Num",
-  [_NUMOLD] = "NumOLD", 
 	[_NAV] = "Nav",
   [_SYM] = "Sym",
   [_MOUSE] = "Mouse",
