@@ -45,13 +45,15 @@ bool oled_task_user(void) {
 }
 #endif
 
+/*
 const uint16_t PROGMEM left_reset_combo[] = {KC_WH_U, KC_WH_D, KC_TAB, COMBO_END};
 const uint16_t PROGMEM right_reset_combo[] = {KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, COMBO_END};
 
-combo_t key_combos[COMBO_COUNT] = {
-    COMBO(left_reset_combo, QK_BOOT),
-    COMBO(right_reset_combo, QK_BOOT),
-};
+  combo_t key_combos[COMBO_COUNT] = {
+  COMBO(left_reset_combo, QK_BOOT),
+  COMBO(right_reset_combo, QK_BOOT),
+  };
+*/
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ISRT] = LAYOUT(

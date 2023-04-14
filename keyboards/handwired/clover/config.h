@@ -25,4 +25,4 @@
 #define IGNORE_MOD_TAP_INTERRUPT // Fix for mod tap rollover
 
 // Used for program reset combo
-#define COMBO_COUNT 2
+// #define COMBO_COUNT 2
