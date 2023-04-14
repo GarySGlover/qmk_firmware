@@ -3,7 +3,6 @@
 #define DEBUG_MATRIX_SCAN_RATE
 
 // Split hand
-#define EE_HANDS
 #undef SPLIT_USB_DETECT
 
 #define RP2040_BOOTLOADER_DOUBLE_TAP_RESET
