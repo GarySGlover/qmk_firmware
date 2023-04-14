@@ -43,15 +43,20 @@ bool oled_task_user(void) {
 }
 #endif
 
-/*
-const uint16_t PROGMEM left_reset_combo[] = {KC_WH_U, KC_WH_D, KC_TAB, COMBO_END};
-const uint16_t PROGMEM right_reset_combo[] = {KC_MS_BTN1, KC_MS_BTN2, KC_MS_BTN3, COMBO_END};
+const uint16_t PROGMEM default_layer_combo[] = {KC_BSPC, KC_ENT, COMBO_END};
+const uint16_t PROGMEM num_layer_combo[] = {LT(_NUM, UK_M), LT(_NUM, UK_F), COMBO_END};
+const uint16_t PROGMEM mouse_layer_combo[] = {LT(_MOUSE, KC_SPC), LT(_MOUSE, KC_TAB), COMBO_END};
+const uint16_t PROGMEM nav_layer_combo[] = {LT(_NAV, UK_L), LT(_NAV, UK_U), COMBO_END};
+const uint16_t PROGMEM caps_word_combo[] = {MT(MOD_LSFT, UK_D), MT(MOD_RSFT, UK_H), COMBO_END};
 
-  combo_t key_combos[COMBO_COUNT] = {
-  COMBO(left_reset_combo, QK_BOOT),
-  COMBO(right_reset_combo, QK_BOOT),
-  };
-*/
+
+combo_t key_combos[COMBO_COUNT] = {
+  COMBO(default_layer_combo, TO(_ISRT)),
+  COMBO(num_layer_combo, TO(_NUM)),
+  COMBO(mouse_layer_combo, TO(_MOUSE)),
+  COMBO(nav_layer_combo, TO(_NAV)),
+  COMBO(caps_word_combo, QK_CAPS_WORD_TOGGLE)
+};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ISRT] = LAYOUT(
@@ -64,7 +69,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_NUM] = LAYOUT(
                   MT(MOD_LALT, UK_GRV), MT(MOD_LCTL, UK_SCLN), MT(MOD_LSFT, UK_COLN), UK_LCBR, UK_RCBR, UK_PLUS, UK_7, MT(MOD_RSFT, UK_8), MT(MOD_RCTL, UK_9), MT(MOD_LALT, UK_SLSH),
                   UK_TILD, UK_BSLS, UK_UNDS, UK_LPRN, UK_RPRN, UK_EQL, UK_4, UK_5, UK_6, UK_0,
-                  UK_NOT, UK_PIPE, UK_HASH, UK_LBRC, UK_RBRC, UK_MINS, UK_1, UK_2, UK_3, UK_ASTR,
+                  UK_NOT, MT(MOD_LALT, UK_PIPE), MT(MOD_LCTL, UK_HASH), MT(MOD_LSFT, UK_LBRC), MT(MOD_RALT, UK_RBRC), MT(MOD_RALT, UK_MINS), MT(MOD_RSFT, UK_1), MT(MOD_RCTL, UK_2), MT(MOD_LALT, UK_3), UK_ASTR,
                   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
                   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
                   ),
