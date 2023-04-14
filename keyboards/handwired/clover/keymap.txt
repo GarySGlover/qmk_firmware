@@ -1,3 +1,8 @@
+ - Mod tap lock for shift
+ - Layer locks and clear
+ - Debug layer
+ - Reset to bootloader
+
 
 /* ISRT
  * ┌──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┐
