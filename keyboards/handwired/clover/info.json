@@ -26,7 +26,6 @@
     },
     "split": {
         "enabled": true,
-        "main": "eeprom",
         "matrix_pins": {
             "right": {
                 "cols": ["GP2","GP3","GP4","GP5","GP6"],
