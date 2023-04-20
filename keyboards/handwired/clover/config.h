@@ -29,3 +29,6 @@
 
 // Used for program reset combo
 #define COMBO_COUNT 5
+
+// Usb fix
+#define USB_MAX_POWER_CONSUMPTION 500
