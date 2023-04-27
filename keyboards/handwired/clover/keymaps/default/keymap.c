@@ -3,20 +3,27 @@
 
 enum custom_layers {
   _ISRT,
+  _QWERTY,
   _NUM,
   _NAV,
-  _SYM,
   _MOUSE,
   _DEBUG,
 };
 
 static const char * const custom_layer_names[] = {
-	[_ISRT] = "ISRT",
-	[_NUM] = "Num",
-	[_NAV] = "Nav",
-  [_SYM] = "Sym",
+  [_ISRT] = "ISRT",
+  [_QWERTY] = "QWERTY",
+  [_NUM] = "Num",
+  [_NAV] = "Nav",
   [_MOUSE] = "Mouse",
   [_DEBUG] = "Debug",
+};
+
+enum custom_keycodes {
+  CL_CPI_INCREASE = SAFE_RANGE,
+  CL_CPI_DECREASE,
+  CL_CPI_RESET,
+  CL_CLEAR_LAYERS,
 };
 
 #ifdef OLED_ENABLE
@@ -35,36 +42,87 @@ bool oled_task_user(void) {
     oled_write_P(PSTR("Layer: "), false);
     oled_write_P(PSTR(custom_layer_names[get_highest_layer(layer_state)]), false);
     oled_write_P(PSTR("\n"), false);
+
+    char master_cpi[5];
+    utoa(pointing_device_get_cpi(), master_cpi, 10);
+    oled_write_P(PSTR("LM: "), false);
+    oled_write_P(PSTR(master_cpi), false);
+    oled_write_P(PSTR(" RM: "), false);
+
+    oled_write_P(PSTR("\n"), false);
   } else {
     render_logo();
   }
-    
+
   return false;
 }
 #endif
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+  case CL_CPI_DECREASE:
+    if (record->event.pressed) {
+      pointing_device_set_cpi(800);
+      pointing_device_set_cpi_on_side(false, 800);
+    }
+    return false;
+  case CL_CPI_INCREASE:
+    if (record->event.pressed) {
+      pointing_device_set_cpi(3200);
+      pointing_device_set_cpi_on_side(false, 3200);
+    }
+    return false;
+  case CL_CPI_RESET:
+    if (record->event.pressed) {
+      pointing_device_set_cpi(1600);
+      pointing_device_set_cpi_on_side(false, 1600);
+    }
+    return false;
+  case CL_CLEAR_LAYERS:
+    if (record->event.pressed) {
+      layer_clear();
+    }
+    return false;
+  }
+
+  return true;
+}
 
 const uint16_t PROGMEM default_layer_combo[] = {KC_BSPC, KC_ENT, COMBO_END};
 const uint16_t PROGMEM num_layer_combo[] = {LT(_NUM, UK_M), LT(_NUM, UK_F), COMBO_END};
 const uint16_t PROGMEM mouse_layer_combo[] = {LT(_MOUSE, KC_SPC), LT(_MOUSE, KC_TAB), COMBO_END};
 const uint16_t PROGMEM nav_layer_combo[] = {LT(_NAV, UK_L), LT(_NAV, UK_U), COMBO_END};
 const uint16_t PROGMEM caps_word_combo[] = {MT(MOD_LSFT, UK_D), MT(MOD_RSFT, UK_H), COMBO_END};
+const uint16_t PROGMEM num_layer_q_combo[] = {LT(_NUM, UK_R), LT(_NUM, UK_U), COMBO_END};
+const uint16_t PROGMEM nav_layer_q_combo[] = {LT(_NAV, UK_E), LT(_NAV, UK_I), COMBO_END};
+const uint16_t PROGMEM caps_word_q_combo[] = {MT(MOD_LSFT, UK_V), MT(MOD_RSFT, UK_M), COMBO_END};
 
 
 combo_t key_combos[COMBO_COUNT] = {
-  COMBO(default_layer_combo, TO(_ISRT)),
+  COMBO(default_layer_combo, CL_CLEAR_LAYERS),
   COMBO(num_layer_combo, TO(_NUM)),
   COMBO(mouse_layer_combo, TO(_MOUSE)),
   COMBO(nav_layer_combo, TO(_NAV)),
-  COMBO(caps_word_combo, QK_CAPS_WORD_TOGGLE)
+  COMBO(caps_word_combo, QK_CAPS_WORD_TOGGLE),
+  COMBO(num_layer_q_combo, TO(_NUM)),
+  COMBO(nav_layer_q_combo, TO(_NAV)),
+  COMBO(caps_word_q_combo, QK_CAPS_WORD_TOGGLE)
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ISRT] = LAYOUT(
                    UK_Y, LT(_DEBUG, UK_C), LT(_NAV, UK_L), LT(_NUM, UK_M), UK_K, UK_Z, LT(_NUM, UK_F), LT(_NAV, UK_U), LT(_DEBUG, UK_COMM), UK_QUOT,
-                   UK_I, UK_S, UK_R, UK_T, UK_G, UK_P, UK_N, UK_E, UK_A, UK_O, 
-                   UK_Q, MT(MOD_LALT, UK_V), MT(MOD_LCTL, UK_W), MT(MOD_LSFT, UK_D), MT(MOD_RALT, UK_J), MT(MOD_RALT, UK_B), MT(MOD_RSFT, UK_H), MT(MOD_RCTL, UK_SLSH), MT(MOD_LALT, UK_DOT), UK_X, 
-                   KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                   KC_BSPC, LT(_MOUSE, KC_SPC), KC_NO, KC_NO, OSM(MOD_LGUI), KC_NO, LT(_MOUSE, KC_TAB), KC_ENT
+                   UK_I, UK_S, UK_R, UK_T, UK_G, UK_P, UK_N, UK_E, UK_A, UK_O,
+                   UK_Q, MT(MOD_LALT, UK_V), MT(MOD_LCTL, UK_W), MT(MOD_LSFT, UK_D), MT(MOD_RALT, UK_J), MT(MOD_RALT, UK_B), MT(MOD_RSFT, UK_H), MT(MOD_RCTL, UK_SLSH), MT(MOD_LALT, UK_DOT), UK_X,
+                   CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE, KC_NO, KC_NO, KC_NO,
+                   KC_BSPC, LT(_MOUSE, KC_SPC), QK_GRAVE_ESCAPE, KC_NO, OSM(MOD_LGUI), KC_NO, LT(_MOUSE, KC_TAB), KC_ENT
+                   ),
+  [_QWERTY] = LAYOUT(
+                   UK_Q, LT(_DEBUG, UK_W), LT(_NAV, UK_E), LT(_NUM, UK_R), UK_T, UK_Y, LT(_NUM, UK_U), LT(_NAV, UK_I), LT(_DEBUG, UK_O), UK_P,
+                   UK_A, UK_S, UK_D, UK_F, UK_G, UK_H, UK_J, UK_K, UK_L, UK_QUOT,
+                   UK_Z, MT(MOD_LALT, UK_X), MT(MOD_LCTL, UK_C), MT(MOD_LSFT, UK_V), MT(MOD_RALT, UK_B), MT(MOD_RALT, UK_N), MT(MOD_RSFT, UK_M), MT(MOD_RCTL, UK_COMM), MT(MOD_LALT, UK_DOT), UK_SLSH,
+                   CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE, KC_NO, KC_NO, KC_NO,
+                   KC_BSPC, LT(_MOUSE, KC_SPC), QK_GRAVE_ESCAPE, KC_NO, OSM(MOD_LGUI), KC_NO, LT(_MOUSE, KC_TAB), KC_ENT
                    ),
   [_NUM] = LAYOUT(
                   MT(MOD_LALT, UK_GRV), MT(MOD_LCTL, UK_SCLN), MT(MOD_LSFT, UK_COLN), UK_LCBR, UK_RCBR, UK_PLUS, UK_7, MT(MOD_RSFT, UK_8), MT(MOD_RCTL, UK_9), MT(MOD_LALT, UK_SLSH),
@@ -80,13 +138,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
                   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
                   ),
-  [_SYM] = LAYOUT(
-                  KC_EXLM, KC_AT, KC_HASH, KC_DLR, KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_UNDS, KC_PLUS,
-                  KC_LT, KC_LBRC, KC_LCBR, KC_LPRN, KC_SCLN, KC_COLN, KC_RPRN, KC_RCBR, KC_RBRC, KC_GT,
-                  KC_NO, MT(MOD_LALT, KC_NO), MT(MOD_LCTL, KC_PIPE), MT(MOD_LSFT, KC_SLSH), KC_NO, KC_NO, MT(MOD_RSFT, KC_NUBS), MT(MOD_RCTL, KC_QUES), MT(MOD_LALT, KC_NO), KC_NO,
-                  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-                  KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
-                  ),
   [_MOUSE] = LAYOUT(
                     KC_NO, KC_NO, KC_WH_U, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
                     KC_NO, KC_WH_L, KC_WH_D, KC_WH_R, KC_NO, KC_BTN5, KC_BTN1, KC_BTN2, KC_BTN3, KC_BTN4,
@@ -96,10 +147,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                     ),
   [_DEBUG] = LAYOUT(
                     QK_BOOT, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, QK_BOOT,
-                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+                    DF(_ISRT), DF(_QWERTY), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
                     KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
                     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
                     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
                     ),
-  
 };

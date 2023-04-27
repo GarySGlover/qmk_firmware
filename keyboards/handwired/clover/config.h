@@ -1,7 +1,5 @@
 #pragma once
 
-#define DEBUG_MATRIX_SCAN_RATE
-
 // Split hand
 #undef SPLIT_USB_DETECT
 #define EE_HANDS
@@ -28,7 +26,7 @@
 #define IGNORE_MOD_TAP_INTERRUPT // Fix for mod tap rollover
 
 // Used for program reset combo
-#define COMBO_COUNT 5
+#define COMBO_COUNT 8
 
 // Usb fix
 #define USB_MAX_POWER_CONSUMPTION 500
