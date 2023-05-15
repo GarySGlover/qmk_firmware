@@ -28,7 +28,7 @@
 // Used for program reset combo
 #define COMBO_COUNT 68
 #define EXTRA_EXTRA_LONG_COMBOS
-#define COMBO_TERM 100
+#define COMBO_TERM 50
 //#define COMBO_NO_TIMER
 
 // Usb fix
