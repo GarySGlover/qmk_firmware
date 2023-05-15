@@ -26,7 +26,10 @@
 #define IGNORE_MOD_TAP_INTERRUPT // Fix for mod tap rollover
 
 // Used for program reset combo
-#define COMBO_COUNT 8
+#define COMBO_COUNT 68
+#define EXTRA_EXTRA_LONG_COMBOS
+#define COMBO_TERM 100
+//#define COMBO_NO_TIMER
 
 // Usb fix
 #define USB_MAX_POWER_CONSUMPTION 500
