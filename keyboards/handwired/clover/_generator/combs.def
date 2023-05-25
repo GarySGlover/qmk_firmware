@@ -1,13 +1,3 @@
-COMBO_REF_LAYER(_ISRT, _ISRT_PLAIN)
-
-COMB(default_layer_combo, CL_CLEAR_LAYERS, KC_BSPC, KC_ENT)
-COMB(num_layer_combo, TO(_NUM), UK_M, UK_F)
-COMB(mouse_layer_combo, TO(_MOUSE), KC_SPC, KC_TAB)
-COMB(nav_layer_combo, TO(_NAV), UK_L, UK_U)
-COMB(caps_word_combo, QK_CAPS_WORD_TOGGLE, UK_D, UK_H)
-
-COMB(delete_combo, KC_BSPC, UK_N, UK_E, UK_A)
-
 SUBS(txt_8e7034,            "the ", KC_T, KC_E)
 SUBS(txt_b236f7,            "she ", KC_S, KC_E)
 SUBS(txt_810df5,            "are ", KC_E, KC_A)
@@ -34,5 +24,5 @@ SUBS(txt_f5a0f7,           "that ", KC_T, KC_A)
 SUBS(txt_201702,           "this ", KC_T, KC_I)
 SUBS(txt_7f9ad1,           "they ", KC_T, KC_Y)
 SUBS(txt_455ae0,           "have ", KC_H, KC_V)
-SUBS(txt_b12f3c,          "there ", KC_T, KC_H)
 SUBS(txt_7dac6e,          "about ", KC_A, KC_B)
+SUBS(txt_b12f3c,          "there ", KC_T, KC_H)

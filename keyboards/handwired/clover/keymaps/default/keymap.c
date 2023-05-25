@@ -1,25 +1,26 @@
 #include QMK_KEYBOARD_H
 #include <keymap_uk.h>
+#include "features/repeat_key.h"
 
 enum custom_keycodes {
   CL_CPI_INCREASE = SAFE_RANGE,
   CL_CPI_DECREASE,
   CL_CPI_RESET,
   CL_CLEAR_LAYERS,
-  IR_SFT,
+  REPEAT,
 };
-
-#include "g/keymap_combo.h"
 
 enum custom_layers {
   _ISRT,
+  _ISRT_PLAIN,
   _QWERTY,
   _NUM,
   _NAV,
   _MOUSE,
   _DEBUG,
-  _IRONSEAT
 };
+
+#include "g/keymap_combo.h"
 
 static const char * const custom_layer_names[] = {
   [_ISRT] = "ISRT",
@@ -27,17 +28,8 @@ static const char * const custom_layer_names[] = {
   [_NUM] = "Num",
   [_NAV] = "Nav",
   [_MOUSE] = "Mouse",
-  [_DEBUG] = "Debug",
-  [_IRONSEAT] = "Iron Seat",
+  [_DEBUG] = "Debug"
 };
-
-/* enum custom_keycodes { */
-/*   CL_CPI_INCREASE = SAFE_RANGE, */
-/*   CL_CPI_DECREASE, */
-/*   CL_CPI_RESET, */
-/*   CL_CLEAR_LAYERS, */
-/*   IR_SFT, */
-/* }; */
 
 #ifdef OLED_ENABLE
 static void render_logo(void) {
@@ -72,6 +64,8 @@ bool oled_task_user(void) {
 #endif
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  if (!process_repeat_key(keycode, record, REPEAT)) { return false; }
+
   switch (keycode) {
   case CL_CPI_DECREASE:
     if (record->event.pressed) {
@@ -108,136 +102,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
-/* const uint16_t PROGMEM default_layer_combo[] = {KC_BSPC, KC_ENT, COMBO_END}; */
-/* const uint16_t PROGMEM num_layer_combo[] = {LT(_NUM, UK_M), LT(_NUM, UK_F), COMBO_END}; */
-/* const uint16_t PROGMEM mouse_layer_combo[] = {LT(_MOUSE, KC_SPC), LT(_MOUSE, KC_TAB), COMBO_END}; */
-/* const uint16_t PROGMEM nav_layer_combo[] = {LT(_NAV, UK_L), LT(_NAV, UK_U), COMBO_END}; */
-/* const uint16_t PROGMEM caps_word_combo[] = {MT(MOD_LSFT, UK_D), MT(MOD_RSFT, UK_H), COMBO_END}; */
-/* const uint16_t PROGMEM num_layer_q_combo[] = {LT(_NUM, UK_R), LT(_NUM, UK_U), COMBO_END}; */
-/* const uint16_t PROGMEM nav_layer_q_combo[] = {LT(_NAV, UK_E), LT(_NAV, UK_I), COMBO_END}; */
-/* const uint16_t PROGMEM caps_word_q_combo[] = {MT(MOD_LSFT, UK_V), MT(MOD_RSFT, UK_M), COMBO_END}; */
-
-/* const uint16_t PROGMEM iron_b[] = {KC_R, KC_N, COMBO_END}; */
-/* const uint16_t PROGMEM iron_c[] = {KC_S, KC_R, COMBO_END}; */
-/* const uint16_t PROGMEM iron_d[] = {KC_E, KC_A, COMBO_END}; */
-/* const uint16_t PROGMEM iron_f[] = {KC_S, KC_T, COMBO_END}; */
-/* const uint16_t PROGMEM iron_g[] = {KC_N, KC_A, COMBO_END}; */
-/* const uint16_t PROGMEM iron_h[] = {KC_R, KC_T, COMBO_END}; */
-/* const uint16_t PROGMEM iron_j[] = {KC_R, KC_A, COMBO_END}; */
-/* const uint16_t PROGMEM iron_k[] = {KC_S, KC_N, COMBO_END}; */
-/* const uint16_t PROGMEM iron_l[] = {KC_N, KC_E, COMBO_END}; */
-/* const uint16_t PROGMEM iron_m[] = {KC_R, KC_E, COMBO_END}; */
-/* const uint16_t PROGMEM iron_p[] = {KC_I, KC_T, COMBO_END}; */
-/* const uint16_t PROGMEM iron_q[] = {KC_I, KC_O, COMBO_END}; */
-/* const uint16_t PROGMEM iron_u[] = {KC_T, KC_N, COMBO_END}; */
-/* const uint16_t PROGMEM iron_v[] = {KC_T, KC_A, COMBO_END}; */
-/* const uint16_t PROGMEM iron_w[] = {KC_T, KC_E, COMBO_END}; */
-/* const uint16_t PROGMEM iron_x[] = {KC_S, KC_A, COMBO_END}; */
-/* const uint16_t PROGMEM iron_y[] = {KC_N, KC_O, COMBO_END}; */
-/* const uint16_t PROGMEM iron_z[] = {KC_S, KC_E, COMBO_END}; */
-/* const uint16_t PROGMEM iron_A[] = {IR_SFT, KC_A, COMBO_END}; */
-/* const uint16_t PROGMEM iron_B[] = {IR_SFT, KC_R, KC_N, COMBO_END}; */
-/* const uint16_t PROGMEM iron_C[] = {IR_SFT, KC_S, KC_R, COMBO_END}; */
-/* const uint16_t PROGMEM iron_D[] = {IR_SFT, KC_E, KC_A, COMBO_END}; */
-/* const uint16_t PROGMEM iron_E[] = {IR_SFT, KC_E, COMBO_END}; */
-/* const uint16_t PROGMEM iron_F[] = {IR_SFT, KC_S, KC_T, COMBO_END}; */
-/* const uint16_t PROGMEM iron_G[] = {IR_SFT, KC_N, KC_A, COMBO_END}; */
-/* const uint16_t PROGMEM iron_H[] = {IR_SFT, KC_R, KC_T, COMBO_END}; */
-/* const uint16_t PROGMEM iron_I[] = {IR_SFT, KC_I, COMBO_END}; */
-/* const uint16_t PROGMEM iron_J[] = {IR_SFT, KC_R, KC_A, COMBO_END}; */
-/* const uint16_t PROGMEM iron_K[] = {IR_SFT, KC_S, KC_N, COMBO_END}; */
-/* const uint16_t PROGMEM iron_L[] = {IR_SFT, KC_N, KC_E, COMBO_END}; */
-/* const uint16_t PROGMEM iron_M[] = {IR_SFT,  KC_R, KC_E, COMBO_END}; */
-/* const uint16_t PROGMEM iron_N[] = {IR_SFT, KC_N, COMBO_END}; */
-/* const uint16_t PROGMEM iron_O[] = {IR_SFT, KC_O, COMBO_END}; */
-/* const uint16_t PROGMEM iron_P[] = {IR_SFT, KC_I, KC_T, COMBO_END}; */
-/* const uint16_t PROGMEM iron_R[] = {IR_SFT, KC_R, COMBO_END}; */
-/* const uint16_t PROGMEM iron_Q[] = {IR_SFT, KC_I, KC_O, COMBO_END}; */
-/* const uint16_t PROGMEM iron_S[] = {IR_SFT, KC_S, COMBO_END}; */
-/* const uint16_t PROGMEM iron_T[] = {IR_SFT, KC_T, COMBO_END}; */
-/* const uint16_t PROGMEM iron_U[] = {IR_SFT, KC_T, KC_N, COMBO_END}; */
-/* const uint16_t PROGMEM iron_V[] = {IR_SFT, KC_T, KC_A, COMBO_END}; */
-/* const uint16_t PROGMEM iron_W[] = {IR_SFT, KC_T, KC_E, COMBO_END}; */
-/* const uint16_t PROGMEM iron_X[] = {IR_SFT, KC_S, KC_A, COMBO_END}; */
-/* const uint16_t PROGMEM iron_Y[] = {IR_SFT, KC_N, KC_O, COMBO_END}; */
-/* const uint16_t PROGMEM iron_Z[] = {IR_SFT, KC_S, KC_E, COMBO_END}; */
-/* const uint16_t PROGMEM iron_ctl[] = {KC_I, KC_S, KC_R, COMBO_END}; */
-/* const uint16_t PROGMEM iron_alt[] = {KC_E, KC_A, KC_O, COMBO_END}; */
-/* const uint16_t PROGMEM iron_com[] = {KC_T, KC_O, COMBO_END}; */
-/* const uint16_t PROGMEM iron_dot[] = {KC_I, KC_N, COMBO_END}; */
-/* const uint16_t PROGMEM iron_ent[] = {KC_S, KC_R, KC_T, COMBO_END}; */
-/* const uint16_t PROGMEM iron_bkspc[] = {KC_N, KC_E, KC_A, COMBO_END}; */
-
-/* combo_t key_combos[COMBO_COUNT] = { */
-/*   COMBO(default_layer_combo, CL_CLEAR_LAYERS), */
-/*   COMBO(num_layer_combo, TO(_NUM)), */
-/*   COMBO(mouse_layer_combo, TO(_MOUSE)), */
-/*   COMBO(nav_layer_combo, TO(_NAV)), */
-/*   COMBO(caps_word_combo, QK_CAPS_WORD_TOGGLE), */
-/*   COMBO(num_layer_q_combo, TO(_NUM)), */
-/*   COMBO(nav_layer_q_combo, TO(_NAV)), */
-/*   COMBO(caps_word_q_combo, QK_CAPS_WORD_TOGGLE), */
-/*   COMBO(iron_b, KC_B), */
-/*   COMBO(iron_c, KC_C), */
-/*   COMBO(iron_d, KC_D), */
-/*   COMBO(iron_f, KC_F), */
-/*   COMBO(iron_g, KC_G), */
-/*   COMBO(iron_h, KC_H), */
-/*   COMBO(iron_j, KC_J), */
-/*   COMBO(iron_k, KC_K), */
-/*   COMBO(iron_l, KC_L), */
-/*   COMBO(iron_m, KC_M), */
-/*   COMBO(iron_p, KC_P), */
-/*   COMBO(iron_q, KC_Q), */
-/*   COMBO(iron_u, KC_U), */
-/*   COMBO(iron_v, KC_V), */
-/*   COMBO(iron_w, KC_W), */
-/*   COMBO(iron_x, KC_X), */
-/*   COMBO(iron_y, KC_Y), */
-/*   COMBO(iron_z, KC_Z), */
-/*   COMBO(iron_A, LSFT(KC_A)), */
-/*   COMBO(iron_B, LSFT(KC_B)), */
-/*   COMBO(iron_C, LSFT(KC_C)), */
-/*   COMBO(iron_D, LSFT(KC_D)), */
-/*   COMBO(iron_E, LSFT(KC_E)), */
-/*   COMBO(iron_F, LSFT(KC_F)), */
-/*   COMBO(iron_G, LSFT(KC_G)), */
-/*   COMBO(iron_H, LSFT(KC_H)), */
-/*   COMBO(iron_I, LSFT(KC_I)), */
-/*   COMBO(iron_J, LSFT(KC_J)), */
-/*   COMBO(iron_K, LSFT(KC_K)), */
-/*   COMBO(iron_L, LSFT(KC_L)), */
-/*   COMBO(iron_M, LSFT(KC_M)), */
-/*   COMBO(iron_N, LSFT(KC_N)), */
-/*   COMBO(iron_O, LSFT(KC_O)), */
-/*   COMBO(iron_P, LSFT(KC_P)), */
-/*   COMBO(iron_Q, LSFT(KC_Q)), */
-/*   COMBO(iron_R, LSFT(KC_R)), */
-/*   COMBO(iron_S, LSFT(KC_S)), */
-/*   COMBO(iron_T, LSFT(KC_T)), */
-/*   COMBO(iron_U, LSFT(KC_U)), */
-/*   COMBO(iron_V, LSFT(KC_V)), */
-/*   COMBO(iron_W, LSFT(KC_W)), */
-/*   COMBO(iron_X, LSFT(KC_X)), */
-/*   COMBO(iron_Y, LSFT(KC_Y)), */
-/*   COMBO(iron_Z, LSFT(KC_Z)), */
-/*   COMBO(iron_ctl, OSM(MOD_LCTL)), */
-/*   COMBO(iron_alt, OSM(MOD_LALT)), */
-/*   COMBO(iron_com, KC_COMM), */
-/*   COMBO(iron_dot, KC_DOT), */
-/*   COMBO(iron_ent, KC_ENT), */
-/*   COMBO(iron_bkspc, KC_BSPC), */
-/* }; */
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ISRT] = LAYOUT(
-                   UK_Y, LT(_DEBUG, UK_C), LT(_NAV, UK_L), LT(_NUM, UK_M), UK_K, UK_Z, LT(_NUM, UK_F), LT(_NAV, UK_U), LT(_DEBUG, UK_COMM), UK_QUOT,
+                   UK_Y, LT(_DEBUG, UK_C), LT(_NAV, UK_L), LT(_NUM, UK_M), UK_K, UK_Z,  LT(_NUM, UK_F), LT(_NAV, UK_U), LT(_DEBUG, UK_COMM), UK_QUOT,
                    UK_I, UK_S, UK_R, UK_T, UK_G, UK_P, UK_N, UK_E, UK_A, UK_O,
                    UK_Q, MT(MOD_LALT, UK_V), MT(MOD_LCTL, UK_W), MT(MOD_LSFT, UK_D), MT(MOD_RALT, UK_J), MT(MOD_RALT, UK_B), MT(MOD_RSFT, UK_H), MT(MOD_RCTL, UK_SLSH), MT(MOD_LALT, UK_DOT), UK_X,
                    CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE, KC_NO, KC_NO, KC_NO,
-                   KC_BSPC, LT(_MOUSE, KC_SPC), QK_GRAVE_ESCAPE, KC_NO, OSM(MOD_LGUI), OSM(MOD_LSFT), LT(_MOUSE, KC_TAB), KC_ENT
+                   KC_BSPC, LT(_MOUSE, KC_SPC), QK_GRAVE_ESCAPE, REPEAT, OSM(MOD_LGUI), OSM(MOD_LSFT), LT(_MOUSE, KC_TAB), KC_ENT
                    ),
-  [_QWERTY] = LAYOUT(
+  [_ISRT_PLAIN] = LAYOUT(
+                   UK_Y, UK_C, UK_L, UK_M, UK_K, UK_Z, UK_F, UK_U, UK_COMM, UK_QUOT,
+                   UK_I, UK_S, UK_R, UK_T, UK_G, UK_P, UK_N, UK_E, UK_A, UK_O,
+                   UK_Q, UK_V, UK_W, UK_D, UK_J,  UK_B, UK_H, UK_SLSH, UK_DOT, UK_X,
+                   CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE, KC_NO, KC_NO, KC_NO,
+                   KC_BSPC, LT(_MOUSE, KC_SPC), QK_GRAVE_ESCAPE, KC_NO, OSM(MOD_LGUI), OSM(MOD_LSFT), LT(_MOUSE, KC_TAB), KC_ENT
+                   ),  [_QWERTY] = LAYOUT(
                    UK_Q, LT(_DEBUG, UK_W), LT(_NAV, UK_E), LT(_NUM, UK_R), UK_T, UK_Y, LT(_NUM, UK_U), LT(_NAV, UK_I), LT(_DEBUG, UK_O), UK_P,
                    UK_A, UK_S, UK_D, UK_F, UK_G, UK_H, UK_J, UK_K, UK_L, UK_QUOT,
                    UK_Z, MT(MOD_LALT, UK_X), MT(MOD_LCTL, UK_C), MT(MOD_LSFT, UK_V), MT(MOD_RALT, UK_B), MT(MOD_RALT, UK_N), MT(MOD_RSFT, UK_M), MT(MOD_RCTL, UK_COMM), MT(MOD_LALT, UK_DOT), UK_SLSH,
