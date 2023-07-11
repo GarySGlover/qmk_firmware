@@ -3,14 +3,17 @@ COMBO_REF_LAYER(_ISRT, _ISRT_PLAIN)
 COMB(lboot, QK_BOOT, CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE)
 COMB(rboot, QK_BOOT, KC_VOLD, KC_MUTE, KC_VOLU)
 
-COMB(num_layer_combo, TO(_NUM), UK_M, UK_F)
-COMB(mouse_layer_combo, TO(_MOUSE), KC_2, KC_7)
-COMB(nav_layer_combo, TO(_NAV), UK_L, UK_U)
+COMB(delete_combo, KC_BSPC, UK_P, UK_N)
+COMB(escape_combo, KC_ESC, UK_B, UK_H)
 
-COMB(delete_combo, KC_BSPC, UK_N, UK_E, UK_A)
-COMB(control_combo, OSM(MOD_LCTL), UK_I, UK_S, UK_R)
-COMB(alt_combo, OSM(MOD_LALT), UK_E, UK_A, UK_O)
+COMB(enter_combo, KC_ENT, UK_T, UK_G)
+COMB(tab_combo, KC_TAB, UK_D, UK_J)
+
 COMB(super_combo, OSM(MOD_LGUI), UK_SLSH, UK_DOT, UK_X)
-COMB(enter_combo, KC_ENT, UK_S, UK_R, UK_T)
-COMB(escape_combo, KC_ESC, UK_H, UK_SLSH, UK_DOT)
-COMB(tab_combo, KC_TAB, UK_V, UK_W, UK_D)
+
+COMB(num_hold_l_combo, MO(_NUM), UK_M, UK_T)
+COMB(num_hold_r_combo, MO(_NUM), UK_F, UK_N)
+
+COMB(nav_hold_l_combo, MO(_NAV), UK_L, UK_R)
+COMB(nav_hold_r_combo, MO(_NAV), UK_E, UK_U)
+
