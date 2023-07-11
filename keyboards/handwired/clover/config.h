@@ -19,7 +19,7 @@
 #define POINTING_DEVICE_INVERT_X_RIGHT
 
 // Caps word
-#define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
+//#define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
 
 // Tap hold config
 #define TAPPING_TERM 200
@@ -29,7 +29,7 @@
 /* #define COMBO_COUNT 68 */
 #define COMBO_VARIABLE_LEN
 #define EXTRA_EXTRA_LONG_COMBOS
-#define COMBO_TERM 50
+#define COMBO_TERM 100
 //#define COMBO_NO_TIMER
 
 // Usb fix

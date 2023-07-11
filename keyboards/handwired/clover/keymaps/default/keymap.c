@@ -1,5 +1,6 @@
 #include QMK_KEYBOARD_H
 #include <keymap_uk.h>
+#include <math.h>
 #include "features/repeat_key.h"
 
 enum custom_keycodes {
@@ -73,6 +74,8 @@ bool oled_task_user(void) {
 }
 #endif
 
+int pointing_speed = 1600;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (!process_repeat_key(keycode, record, CL_REPEAT)) { return false; }
   tap_dance_action_t *action;
@@ -87,27 +90,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     break;
   case CL_CPI_DECREASE:
     if (record->event.pressed) {
-      if (pointing_device_get_cpi() > 800) {
-        pointing_device_set_cpi(pointing_device_get_cpi() - 800);
-        pointing_device_set_cpi_on_side(true, pointing_device_get_cpi());
-        pointing_device_set_cpi_on_side(false, pointing_device_get_cpi());
+      if (pointing_speed > 800) {
+        pointing_speed -= 800;
+        pointing_device_set_cpi_on_side(true, pointing_speed);
       }
     }
     return false;
   case CL_CPI_INCREASE:
     if (record->event.pressed) {
-      if (pointing_device_get_cpi() < 12800) {
-        pointing_device_set_cpi(pointing_device_get_cpi() + 800);
-        pointing_device_set_cpi_on_side(true, pointing_device_get_cpi());
-        pointing_device_set_cpi_on_side(false, pointing_device_get_cpi());
+      if (pointing_speed < 12800) {
+        pointing_speed += 800;
+        pointing_device_set_cpi_on_side(true, pointing_speed);
       }
     }
     return false;
   case CL_CPI_RESET:
     if (record->event.pressed) {
-      pointing_device_set_cpi(1600);
-      pointing_device_set_cpi_on_side(true, 1600);
-      pointing_device_set_cpi_on_side(false, 1600);
+      pointing_speed = 1600;
+      pointing_device_set_cpi_on_side(true, pointing_speed);
     }
     return false;
   case CL_CLEAR_LAYERS:
@@ -118,6 +118,34 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 
   return true;
+}
+
+void keyboard_post_init_user(void) {
+    pointing_device_set_cpi_on_side(true, pointing_speed);
+    pointing_device_set_cpi_on_side(false, 1000);
+}
+
+report_mouse_t pointing_device_task_combined_user(report_mouse_t left_report, report_mouse_t right_report) {
+    right_report.h = right_report.x * 0.2;
+    right_report.v = right_report.y * 0.2;
+    right_report.x = 0;
+    right_report.y = 0;
+
+    float magnitude = sqrtf( left_report.x * left_report.x + left_report.y * left_report.y ) * 0.8;
+    //float adjusted_magnitude = powf(magnitude, 1.2f);
+    if (left_report.x > 0 ) {
+      left_report.x = MAX((int16_t)(left_report.x * magnitude), left_report.x);
+    } else {
+      left_report.x = MIN((int16_t)(left_report.x * magnitude), left_report.x);
+    }
+
+    if (left_report.y > 0) {
+      left_report.y = MAX((int16_t)(left_report.y * magnitude), left_report.y);
+    } else {
+      left_report.y = MIN((int16_t)(left_report.y * magnitude), left_report.y);
+    }
+
+    return pointing_device_combine_reports(left_report, right_report);
 }
 
 void tap_dance_tap_hold_finished(tap_dance_state_t *state, void *user_data) {
@@ -217,14 +245,15 @@ tap_dance_action_t tap_dance_actions[] = {
   [TD_SHIFT_MOUSE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, shiftmouse_finished, shiftmouse_reset),
 };
 
+
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ISRT] = LAYOUT(
-                   UK_Y, LT(_DEBUG, UK_C), LT(_NAV, UK_L), LT(_NUM, UK_M), UK_K, UK_Z,  LT(_NUM, UK_F), LT(_NAV, UK_U), LT(_DEBUG, UK_COMM), UK_QUOT,
+                   UK_Y, UK_C, UK_L, UK_M, UK_K, UK_Z,  UK_F, UK_U, UK_COMM, UK_QUOT,
                    UK_I, UK_S, UK_R, UK_T, UK_G, UK_P, UK_N, UK_E, UK_A, UK_O,
                    UK_Q, UK_V, UK_W, UK_D, UK_J, UK_B, UK_H, UK_SLSH, UK_DOT, UK_X,
                    CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE, KC_VOLD, KC_MUTE, KC_VOLU,
-                   // KC_NO, KC_SPC, CL_MOD_LOCK, TD(TD_SPACE_MODLOCK), KC_NO, KC_NO, TD(TD_SHIFT_MOUSE), CL_REPEAT
-                   CL_REPEAT, KC_SPC, OSM(MOD_LCTL), XXXXXXX, XXXXXXX, OSM(MOD_LALT), OSM(MOD_LSFT), MO(_MOUSE)
+                   CL_REPEAT, KC_SPC, OSM(MOD_LCTL), KC_LGUI, KC_APP, OSM(MOD_LALT), OSM(MOD_LSFT), MO(_MOUSE)
                    ),
   [_ISRT_PLAIN] = LAYOUT(
                    UK_Y, UK_C, UK_L, UK_M, UK_K, UK_Z, UK_F, UK_U, UK_COMM, UK_QUOT,
@@ -234,9 +263,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                    KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8
                    ),
   [_NUM] = LAYOUT(
-                  MT(MOD_LALT, UK_GRV), MT(MOD_LCTL, UK_SCLN), MT(MOD_LSFT, UK_COLN), UK_LCBR, UK_RCBR, UK_PLUS, UK_7, MT(MOD_RSFT, UK_8), MT(MOD_RCTL, UK_9), MT(MOD_LALT, UK_SLSH),
+                  UK_GRV, UK_SCLN, UK_COLN, UK_LCBR, UK_RCBR, UK_PLUS, UK_7, UK_8, UK_9, UK_SLSH,
                   UK_TILD, UK_BSLS, UK_UNDS, UK_LPRN, UK_RPRN, UK_EQL, UK_4, UK_5, UK_6, UK_0,
-                  UK_NOT, MT(MOD_LALT, UK_PIPE), MT(MOD_LCTL, UK_HASH), MT(MOD_LSFT, UK_LBRC), MT(MOD_RALT, UK_RBRC), MT(MOD_RALT, UK_MINS), MT(MOD_RSFT, UK_1), MT(MOD_RCTL, UK_2), MT(MOD_LALT, UK_3), UK_ASTR,
+                  UK_NOT, UK_PIPE, UK_HASH, UK_LBRC, UK_RBRC, UK_MINS, UK_1, UK_2, UK_3, UK_ASTR,
                   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
                   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
                   ),
