@@ -17,8 +17,8 @@ enum custom_layers {
   _MOUSE,
   _SYM,
   _a1,
+  _A1,
   _a2,
-  _A2,
   _num,
   _fn,
   _sym1,
@@ -35,8 +35,8 @@ static const char * const custom_layer_names[] = {
   [_MOUSE] = "Mouse",
   [_SYM] = "Sym",
   [_a1] = "18 a1",
+  [_A1] = "18 A1",
   [_a2] = "18 a2",
-  [_A2] = "18 A2",
   [_num] = "18 num",
   [_fn] = "18 fn",
   [_sym1] = "18 sym1",
@@ -142,7 +142,7 @@ report_mouse_t pointing_device_task_combined_user(report_mouse_t left_report, re
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
-    case _A2:
+    case _A1:
       set_oneshot_mods(MOD_BIT(KC_LSFT));
         break;
     }
@@ -150,60 +150,66 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [_ISRT] = LAYOUT(
-                   UK_Y, UK_C, UK_L, UK_M, UK_K, UK_Z,  UK_F, UK_U, UK_COMM, UK_QUOT,
-                   UK_I, UK_S, UK_R, UK_T, UK_G, UK_P, UK_N, UK_E, UK_A, UK_O,
-                   UK_Q, UK_V, UK_W, UK_D, UK_J, UK_B, UK_H, UK_SLSH, UK_DOT, UK_X,
-                   CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE, KC_VOLD, KC_MUTE, KC_VOLU,
-                   QK_REP, KC_SPC, OSM(MOD_LCTL), KC_LGUI, KC_APP, OSM(MOD_LALT), OSM(MOD_LSFT), MO(_MOUSE)
-                   ),
-  [_NUM] = LAYOUT(
-                  XXXXXXX, KC_F9, KC_F8, KC_F9, KC_F10, UK_PLUS, UK_7, UK_8, UK_9, UK_SLSH,
-                  XXXXXXX, KC_F6, KC_F5, KC_F4, KC_F11, UK_EQL, UK_4, UK_5, UK_6, UK_0,
-                  XXXXXXX, KC_F3, KC_F2, KC_F1, KC_F12, UK_MINS, UK_1, UK_2, UK_3, UK_ASTR,
-                  _______, _______, _______, _______, _______, _______,
-                  _______, _______, _______, _______, _______, _______, _______, _______
-                  ),
-  [_SYM] = LAYOUT(
-                  UK_GRV, UK_SCLN, UK_LCBR, UK_RCBR, UK_COLN, UK_PLUS, KC_AMPR, XXXXXXX, XXXXXXX, UK_SLSH,
-                  UK_TILD, UK_BSLS, UK_LPRN, UK_RPRN, UK_UNDS, UK_EQL, KC_DLR, KC_PERC, KC_CIRC, XXXXXXX,
-                  UK_NOT, UK_PIPE, UK_LBRC, UK_RBRC, UK_HASH, UK_MINS, KC_EXLM, UK_DQUO, UK_PND, UK_ASTR,
-                  _______, _______, _______, _______, _______, _______,
-                  _______, _______, _______, _______, _______, _______, _______, _______
-                  ),
-  [_NAV] = LAYOUT(
-                  KC_NO, KC_NO, KC_UP, KC_HOME, KC_NO, KC_NO, KC_PGUP, KC_NO, KC_NO, KC_NO,
-                  KC_NO, KC_LEFT, KC_DOWN, KC_RGHT, KC_TAB, KC_NO, KC_LEFT, KC_UP, KC_DOWN, KC_RGHT,
-                  KC_NO, KC_NO, KC_NO, KC_END, _______, _______, KC_PGDN, KC_NO, KC_NO, KC_NO,
-                  _______, _______, _______, _______, _______, _______,
-                  _______, _______, _______, _______, _______, _______, _______, _______
-                  ),
-  [_MOUSE] = LAYOUT(
-                    KC_NO, KC_NO, KC_WH_U, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                    KC_NO, KC_WH_L, KC_WH_D, KC_WH_R, KC_NO, KC_BTN5, KC_BTN1, KC_BTN2, KC_BTN3, KC_BTN4,
-                    KC_NO,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_MS_U, KC_MS_L, KC_MS_R, KC_MS_D,
-                    _______, _______, _______, _______, _______, _______,
-                    _______, _______, _______, _______, _______, _______, _______, _______
-                    ),
-  [_a1] = LAYOUT(
-                   XXXXXXX, GUI_T(UK_L), ALT_T(UK_L), CTL_T(UK_G), XXXXXXX, XXXXXXX, CTL_T(UK_H), ALT_T(UK_U), GUI_T(UK_O), XXXXXXX,
+    [_ISRT]  = LAYOUT(UK_Y, UK_C, UK_L, UK_M, UK_K, UK_Z, UK_F, UK_U, UK_COMM, UK_QUOT, UK_I, UK_S, UK_R, UK_T, UK_G, UK_P, UK_N, UK_E, UK_A, UK_O, UK_Q, UK_V, UK_W, UK_D, UK_J, UK_B, UK_H, UK_SLSH, UK_DOT, UK_X, CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE, KC_VOLD, KC_MUTE, KC_VOLU, QK_REP, KC_SPC, OSM(MOD_LCTL), KC_LGUI, KC_APP, OSM(MOD_LALT), OSM(MOD_LSFT), MO(_MOUSE)),
+    [_NUM]   = LAYOUT(XXXXXXX, KC_F9, KC_F8, KC_F9, KC_F10, UK_PLUS, UK_7, UK_8, UK_9, UK_SLSH, XXXXXXX, KC_F6, KC_F5, KC_F4, KC_F11, UK_EQL, UK_4, UK_5, UK_6, UK_0, XXXXXXX, KC_F3, KC_F2, KC_F1, KC_F12, UK_MINS, UK_1, UK_2, UK_3, UK_ASTR, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______),
+    [_SYM]   = LAYOUT(UK_GRV, UK_SCLN, UK_LCBR, UK_RCBR, UK_COLN, UK_PLUS, KC_AMPR, XXXXXXX, XXXXXXX, UK_SLSH, UK_TILD, UK_BSLS, UK_LPRN, UK_RPRN, UK_UNDS, UK_EQL, KC_DLR, KC_PERC, KC_CIRC, XXXXXXX, UK_NOT, UK_PIPE, UK_LBRC, UK_RBRC, UK_HASH, UK_MINS, KC_EXLM, UK_DQUO, UK_PND, UK_ASTR, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______),
+    [_NAV]   = LAYOUT(KC_NO, KC_NO, KC_UP, KC_HOME, KC_NO, KC_NO, KC_PGUP, KC_NO, KC_NO, KC_NO, KC_NO, KC_LEFT, KC_DOWN, KC_RGHT, KC_TAB, KC_NO, KC_LEFT, KC_UP, KC_DOWN, KC_RGHT, KC_NO, KC_NO, KC_NO, KC_END, _______, _______, KC_PGDN, KC_NO, KC_NO, KC_NO, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______),
+    [_MOUSE] = LAYOUT(KC_NO, KC_NO, KC_WH_U, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_WH_L, KC_WH_D, KC_WH_R, KC_NO, KC_BTN5, KC_BTN1, KC_BTN2, KC_BTN3, KC_BTN4, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_MS_U, KC_MS_L, KC_MS_R, KC_MS_D, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______),
+
+    [_a1] = LAYOUT(
+                   XXXXXXX, GUI_T(UK_L), ALT_T(UK_G), CTL_T(UK_D), XXXXXXX, XXXXXXX, CTL_T(UK_H), ALT_T(UK_U), GUI_T(UK_O), XXXXXXX,
                    LT(_num, UK_I), LT(_sym2, UK_S), LT(_sym1, UK_R), LT(_sys, UK_T), XXXXXXX, XXXXXXX, LT(_sys, UK_N), LT(_sym1, UK_E), LT(_sym2, UK_A), LT(_fn, UK_C),
                    LT(_num, UK_I), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, LT(_fn, UK_C),
                    CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE, KC_VOLD, KC_MUTE, KC_VOLU,
-                   QK_REP, MEH_T(KC_SPC), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, OSL(_a2), OSL(_A2)
+                   QK_REP, MEH_T(KC_SPC), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, OSL(_a2), OSL(_A1)
+                   ),
+    [_A1] = LAYOUT(
+                   XXXXXXX, GUI_T(UK_L), ALT_T(UK_G), CTL_T(UK_D), XXXXXXX, XXXXXXX, CTL_T(UK_H), ALT_T(UK_U), GUI_T(UK_O), XXXXXXX,
+                   LT(_num, UK_I), LT(_sym2, UK_S), LT(_sym1, UK_R), LT(_sys, UK_T), XXXXXXX, XXXXXXX, LT(_sys, UK_N), LT(_sym1, UK_E), LT(_sym2, UK_A), LT(_fn, UK_C),
+                   LT(_num, UK_I), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, LT(_fn, UK_C),
+                   _______, _______, _______, _______, _______, _______,
+                   _______, KC_MEH,  _______, _______, _______, _______, _______, _______
                    ),
   [_a2] = LAYOUT(
                  XXXXXXX, GUI_T(UK_V), ALT_T(UK_W), CTL_T(UK_M), XXXXXXX, XXXXXXX, CTL_T(UK_F), ALT_T(UK_QUOT), GUI_T(UK_Z), XXXXXXX,
                    UK_Q, UK_J, UK_P, UK_K, XXXXXXX, XXXXXXX, UK_B, UK_DOT, UK_X, UK_Y,
-                   LT(_num, UK_Q), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, UK_Y,
+                   UK_Q, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, UK_Y,
                    _______, _______, _______, _______, _______, _______,
-                   _______, OSM(MOD_LSFT),  _______, _______, _______, _______, _______, _______
+                 _______, MEH_T(OSM(MOD_LSFT)),  _______, _______, _______, _______, _______, _______
                  ),
-  [_A2] = LAYOUT(
+  [_sym1] = LAYOUT(
+                   XXXXXXX, GUI_T(UK_PND), ALT_T(UK_HASH), CTL_T(UK_DLR), XXXXXXX, XXXXXXX, CTL_T(UK_LABK), ALT_T(UK_RABK), GUI_T(UK_CIRC), XXXXXXX,
+                   UK_GRV, UK_TILD, UK_UNDS, UK_BSLS, XXXXXXX, XXXXXXX, UK_LBRC, UK_RBRC, UK_PIPE, UK_SCLN,
+                   UK_GRV, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, UK_SCLN,
+                   _______, _______, _______, _______, _______, _______,
+                 _______, MEH_T(OSM(MOD_LSFT)),  _______, _______, _______, _______, _______, _______
+                 ),
+  [_sym2] = LAYOUT(
+                 XXXXXXX, GUI_T(UK_AT), ALT_T(UK_QUOT), CTL_T(UK_QUES), XXXXXXX, XXXXXXX, CTL_T(UK_LPRN), ALT_T(UK_RBRC), GUI_T(UK_SCLN), XXXXXXX,
+                   UK_ASTR, UK_PERC, UK_EXLM, UK_DQUO, XXXXXXX, XXXXXXX, UK_LCBR, UK_RCBR, UK_AMPR, UK_COLN,
+                   UK_ASTR, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, UK_COLN,
+                   _______, _______, _______, _______, _______, _______,
+                 _______, MEH_T(OSM(MOD_LSFT)),  _______, _______, _______, _______, _______, _______
+                 ),
+  [_num] = LAYOUT(
                  XXXXXXX, GUI_T(UK_V), ALT_T(UK_W), CTL_T(UK_M), XXXXXXX, XXXXXXX, CTL_T(UK_F), ALT_T(UK_QUOT), GUI_T(UK_Z), XXXXXXX,
                    UK_Q, UK_J, UK_P, UK_K, XXXXXXX, XXXXXXX, UK_B, UK_DOT, UK_X, UK_Y,
                    LT(_num, UK_Q), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, UK_Y,
                    _______, _______, _______, _______, _______, _______,
-                   _______, OSM(MOD_LSFT),  _______, _______, _______, _______, _______, _______
-                   )
+                 _______, MEH_T(OSM(MOD_LSFT)),  _______, _______, _______, _______, _______, _______
+                 ),
+  [_fn] = LAYOUT(
+                 XXXXXXX, GUI_T(UK_V), ALT_T(UK_W), CTL_T(UK_M), XXXXXXX, XXXXXXX, CTL_T(UK_F), ALT_T(UK_QUOT), GUI_T(UK_Z), XXXXXXX,
+                   UK_Q, UK_J, UK_P, UK_K, XXXXXXX, XXXXXXX, UK_B, UK_DOT, UK_X, UK_Y,
+                   LT(_num, UK_Q), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, UK_Y,
+                   _______, _______, _______, _______, _______, _______,
+                 _______, MEH_T(OSM(MOD_LSFT)),  _______, _______, _______, _______, _______, _______
+                 ),
+  [_sys] = LAYOUT(
+                 XXXXXXX, GUI_T(KC_ESC), ALT_T(UK_W), CTL_T(KC_BSPC), XXXXXXX, XXXXXXX, CTL_T(UK_F), ALT_T(UK_QUOT), GUI_T(UK_Z), XXXXXXX,
+                   UK_Q, UK_J, UK_P, UK_K, XXXXXXX, XXXXXXX, UK_B, UK_DOT, UK_X, KC_ENT,
+                   LT(_num, UK_Q), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_ENT,
+                   _______, _______, _______, _______, _______, _______,
+                 _______, MEH_T(OSM(MOD_LSFT)),  _______, _______, _______, _______, _______, _______
+                 ),
 };

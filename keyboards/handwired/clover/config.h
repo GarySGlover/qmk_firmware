@@ -22,6 +22,9 @@
 #define TAPPING_TERM 400
 // #define IGNORE_MOD_TAP_INTERRUPT // Fix for mod tap rollover
 
+// One shot timeout
+#define ONESHOT_TIMEOUT 1000
+
 // Used for program reset combo
 #define COMBO_VARIABLE_LEN
 #define EXTRA_EXTRA_LONG_COMBOS
