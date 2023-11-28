@@ -18,8 +18,15 @@ enum custom_layers {
   _NUM,
   _NAV,
   _MOUSE,
-  _DEBUG,
   _SYM,
+  _a1,
+  _a2,
+  _A2,
+  _num,
+  _fn,
+  _sym1,
+  _sym2,
+  _sys
 };
 
 #include "g/keymap_combo.h"
@@ -40,8 +47,15 @@ static const char * const custom_layer_names[] = {
   [_NUM] = "Num",
   [_NAV] = "Nav",
   [_MOUSE] = "Mouse",
-  [_DEBUG] = "Debug",
   [_SYM] = "Sym",
+  [_a1] = "18 a1",
+  [_a2] = "18 a2",
+  [_A2] = "18 A2",
+  [_num] = "18 num",
+  [_fn] = "18 fn",
+  [_sym1] = "18 sym1",
+  [_sym2] = "18 sym2",
+  [_sys] = "18 sys"
 };
 
 #ifdef OLED_ENABLE
@@ -247,7 +261,14 @@ tap_dance_action_t tap_dance_actions[] = {
   [TD_SHIFT_MOUSE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, shiftmouse_finished, shiftmouse_reset),
 };
 
-
+layer_state_t layer_state_set_user(layer_state_t state) {
+    switch (get_highest_layer(state)) {
+    case _A2:
+      set_oneshot_mods(MOD_BIT(KC_LSFT));
+        break;
+    }
+  return state;
+}
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ISRT] = LAYOUT(
@@ -292,11 +313,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                     _______, _______, _______, _______, _______, _______,
                     _______, _______, _______, _______, _______, _______, _______, _______
                     ),
-  [_DEBUG] = LAYOUT(
-                    QK_BOOT, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, QK_BOOT,
-                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                    _______, _______, _______, _______, _______, _______,
-                    _______, _______, _______, _______, _______, _______, _______, _______
-                    )
+  [_a1] = LAYOUT(
+                   LT(_num, UK_I), GUI_T(UK_L), ALT_T(UK_L), CTL_T(UK_G), XXXXXXX, XXXXXXX, CTL_T(UK_H), ALT_T(UK_U), GUI_T(UK_O), XXXXXXX,
+                   LT(_num, UK_I), LT(_sym2, UK_S), LT(_sym1, UK_R), LT(_sys, UK_T), XXXXXXX, XXXXXXX, LT(_sys, UK_N), LT(_sym1, UK_E), LT(_sym2, UK_A), LT(_fn, UK_C),
+                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, LT(_fn, UK_C),
+                   CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE, KC_VOLD, KC_MUTE, KC_VOLU,
+                   CL_REPEAT, MEH_T(KC_SPC), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, OSL(_a2), OSL(_A2)
+                   ),
+  [_a2] = LAYOUT(
+                 LT(_num, UK_Q), GUI_T(UK_V), ALT_T(UK_W), CTL_T(UK_M), XXXXXXX, XXXXXXX, CTL_T(UK_F), ALT_T(UK_QUOT), GUI_T(UK_Z), XXXXXXX,
+                   UK_Q, UK_J, UK_P, UK_K, XXXXXXX, XXXXXXX, UK_B, UK_DOT, UK_X, UK_Y,
+                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, UK_Y,
+                   _______, _______, _______, _______, _______, _______,
+                   _______, OSM(MOD_LSFT),  _______, _______, _______, _______, _______, _______
+                 ),
+  [_A2] = LAYOUT(
+                 LT(_num, UK_Q), GUI_T(UK_V), ALT_T(UK_W), CTL_T(UK_M), XXXXXXX, XXXXXXX, CTL_T(UK_F), ALT_T(UK_QUOT), GUI_T(UK_Z), XXXXXXX,
+                   UK_Q, UK_J, UK_P, UK_K, XXXXXXX, XXXXXXX, UK_B, UK_DOT, UK_X, UK_Y,
+                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, UK_Y,
+                   _______, _______, _______, _______, _______, _______,
+                   _______, OSM(MOD_LSFT),  _______, _______, _______, _______, _______, _______
+                   )
 };
