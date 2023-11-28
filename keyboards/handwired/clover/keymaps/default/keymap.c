@@ -1,14 +1,12 @@
 #include QMK_KEYBOARD_H
 #include <keymap_uk.h>
 #include <math.h>
-#include "features/repeat_key.h"
 
 enum custom_keycodes {
   CL_CPI_INCREASE = SAFE_RANGE,
   CL_CPI_DECREASE,
   CL_CPI_RESET,
   CL_CLEAR_LAYERS,
-  CL_REPEAT,
   CL_MOD_LOCK,
 };
 
@@ -81,7 +79,6 @@ bool oled_task_user(void) {
 int pointing_speed = 1600;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  if (!process_repeat_key(keycode, record, CL_REPEAT)) { return false; }
   switch (keycode) {
   case CL_CPI_DECREASE:
     if (record->event.pressed) {
@@ -158,7 +155,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                    UK_I, UK_S, UK_R, UK_T, UK_G, UK_P, UK_N, UK_E, UK_A, UK_O,
                    UK_Q, UK_V, UK_W, UK_D, UK_J, UK_B, UK_H, UK_SLSH, UK_DOT, UK_X,
                    CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE, KC_VOLD, KC_MUTE, KC_VOLU,
-                   CL_REPEAT, KC_SPC, OSM(MOD_LCTL), KC_LGUI, KC_APP, OSM(MOD_LALT), OSM(MOD_LSFT), MO(_MOUSE)
+                   QK_REP, KC_SPC, OSM(MOD_LCTL), KC_LGUI, KC_APP, OSM(MOD_LALT), OSM(MOD_LSFT), MO(_MOUSE)
                    ),
   [_NUM] = LAYOUT(
                   XXXXXXX, KC_F9, KC_F8, KC_F9, KC_F10, UK_PLUS, UK_7, UK_8, UK_9, UK_SLSH,
@@ -193,7 +190,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                    LT(_num, UK_I), LT(_sym2, UK_S), LT(_sym1, UK_R), LT(_sys, UK_T), XXXXXXX, XXXXXXX, LT(_sys, UK_N), LT(_sym1, UK_E), LT(_sym2, UK_A), LT(_fn, UK_C),
                    LT(_num, UK_I), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, LT(_fn, UK_C),
                    CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE, KC_VOLD, KC_MUTE, KC_VOLU,
-                   CL_REPEAT, MEH_T(KC_SPC), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, OSL(_a2), OSL(_A2)
+                   QK_REP, MEH_T(KC_SPC), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, OSL(_a2), OSL(_A2)
                    ),
   [_a2] = LAYOUT(
                  XXXXXXX, GUI_T(UK_V), ALT_T(UK_W), CTL_T(UK_M), XXXXXXX, XXXXXXX, CTL_T(UK_F), ALT_T(UK_QUOT), GUI_T(UK_Z), XXXXXXX,

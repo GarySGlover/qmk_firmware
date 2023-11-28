@@ -18,15 +18,11 @@
 #define POINTING_DEVICE_INVERT_X
 #define POINTING_DEVICE_INVERT_X_RIGHT
 
-// Caps word
-//#define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
-
 // Tap hold config
-#define TAPPING_TERM 200
-#define IGNORE_MOD_TAP_INTERRUPT // Fix for mod tap rollover
+#define TAPPING_TERM 400
+// #define IGNORE_MOD_TAP_INTERRUPT // Fix for mod tap rollover
 
 // Used for program reset combo
-/* #define COMBO_COUNT 68 */
 #define COMBO_VARIABLE_LEN
 #define EXTRA_EXTRA_LONG_COMBOS
 #define COMBO_TERM 100
