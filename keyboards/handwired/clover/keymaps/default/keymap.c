@@ -16,14 +16,8 @@ enum custom_layers {
   _NAV,
   _MOUSE,
   _SYM,
-  _a1,
-  _a2,
-  _A2,
-  _num,
-  _fn,
-  _sym1,
-  _sym2,
-  _sys
+  _GAME,
+  _GNUM,
 };
 
 #include "g/keymap_combo.h"
@@ -34,14 +28,8 @@ static const char * const custom_layer_names[] = {
   [_NAV] = "Nav",
   [_MOUSE] = "Mouse",
   [_SYM] = "Sym",
-  [_a1] = "18 a1",
-  [_a2] = "18 a2",
-  [_A2] = "18 A2",
-  [_num] = "18 num",
-  [_fn] = "18 fn",
-  [_sym1] = "18 sym1",
-  [_sym2] = "18 sym2",
-  [_sys] = "18 sys"
+  [_GAME] = "Game",
+  [_GNUM] = "Gnum",
 };
 
 #ifdef OLED_ENABLE
@@ -84,7 +72,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
       if (pointing_speed > 800) {
         pointing_speed -= 800;
-        pointing_device_set_cpi_on_side(true, pointing_speed);
+        pointing_device_set_cpi(pointing_speed);        
       }
     }
     return false;
@@ -92,14 +80,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (record->event.pressed) {
       if (pointing_speed < 12800) {
         pointing_speed += 800;
-        pointing_device_set_cpi_on_side(true, pointing_speed);
+        pointing_device_set_cpi(pointing_speed);
       }
     }
     return false;
   case CL_CPI_RESET:
     if (record->event.pressed) {
       pointing_speed = 1600;
-      pointing_device_set_cpi_on_side(true, pointing_speed);
+      pointing_device_set_cpi(pointing_speed);
     }
     return false;
   case CL_CLEAR_LAYERS:
@@ -113,40 +101,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void keyboard_post_init_user(void) {
-    pointing_device_set_cpi_on_side(true, pointing_speed);
-    pointing_device_set_cpi_on_side(false, 1000);
-}
-
-report_mouse_t pointing_device_task_combined_user(report_mouse_t left_report, report_mouse_t right_report) {
-    right_report.h = right_report.x * 0.2;
-    right_report.v = right_report.y * 0.2;
-    right_report.x = 0;
-    right_report.y = 0;
-
-    float magnitude = sqrtf( left_report.x * left_report.x + left_report.y * left_report.y ) * 0.8;
-    //float adjusted_magnitude = powf(magnitude, 1.2f);
-    if (left_report.x > 0 ) {
-      left_report.x = MAX((int16_t)(left_report.x * magnitude), left_report.x);
-    } else {
-      left_report.x = MIN((int16_t)(left_report.x * magnitude), left_report.x);
-    }
-
-    if (left_report.y > 0) {
-      left_report.y = MAX((int16_t)(left_report.y * magnitude), left_report.y);
-    } else {
-      left_report.y = MIN((int16_t)(left_report.y * magnitude), left_report.y);
-    }
-
-    return pointing_device_combine_reports(left_report, right_report);
-}
-
-layer_state_t layer_state_set_user(layer_state_t state) {
-    switch (get_highest_layer(state)) {
-    case _A2:
-      set_oneshot_mods(MOD_BIT(KC_LSFT));
-        break;
-    }
-  return state;
+  pointing_device_set_cpi(pointing_speed);
 }
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -185,25 +140,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                     _______, _______, _______, _______, _______, _______,
                     _______, _______, _______, _______, _______, _______, _______, _______
                     ),
-  [_a1] = LAYOUT(
-                   XXXXXXX, GUI_T(UK_L), ALT_T(UK_L), CTL_T(UK_G), XXXXXXX, XXXXXXX, CTL_T(UK_H), ALT_T(UK_U), GUI_T(UK_O), XXXXXXX,
-                   LT(_num, UK_I), LT(_sym2, UK_S), LT(_sym1, UK_R), LT(_sys, UK_T), XXXXXXX, XXXXXXX, LT(_sys, UK_N), LT(_sym1, UK_E), LT(_sym2, UK_A), LT(_fn, UK_C),
-                   LT(_num, UK_I), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, LT(_fn, UK_C),
-                   CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE, KC_VOLD, KC_MUTE, KC_VOLU,
-                   QK_REP, MEH_T(KC_SPC), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, OSL(_a2), OSL(_A2)
-                   ),
-  [_a2] = LAYOUT(
-                 XXXXXXX, GUI_T(UK_V), ALT_T(UK_W), CTL_T(UK_M), XXXXXXX, XXXXXXX, CTL_T(UK_F), ALT_T(UK_QUOT), GUI_T(UK_Z), XXXXXXX,
-                   UK_Q, UK_J, UK_P, UK_K, XXXXXXX, XXXXXXX, UK_B, UK_DOT, UK_X, UK_Y,
-                   LT(_num, UK_Q), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, UK_Y,
-                   _______, _______, _______, _______, _______, _______,
-                   _______, OSM(MOD_LSFT),  _______, _______, _______, _______, _______, _______
-                 ),
-  [_A2] = LAYOUT(
-                 XXXXXXX, GUI_T(UK_V), ALT_T(UK_W), CTL_T(UK_M), XXXXXXX, XXXXXXX, CTL_T(UK_F), ALT_T(UK_QUOT), GUI_T(UK_Z), XXXXXXX,
-                   UK_Q, UK_J, UK_P, UK_K, XXXXXXX, XXXXXXX, UK_B, UK_DOT, UK_X, UK_Y,
-                   LT(_num, UK_Q), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, UK_Y,
-                   _______, _______, _______, _______, _______, _______,
-                   _______, OSM(MOD_LSFT),  _______, _______, _______, _______, _______, _______
-                   )
+  [_GNUM] = LAYOUT(
+                 _______, _______, _______, _______, _______, _______, KC_7,    KC_8,    KC_9,    _______,
+                 _______, _______, _______, _______, _______, _______, KC_4,    KC_5,    KC_6,    KC_0,
+                 _______, _______, _______, _______, _______, _______, KC_1,    KC_2,    KC_3,    _______,
+                 _______, _______, _______, _______, _______, _______,
+                 _______, _______, _______, _______, _______, _______, _______, _______
+                    ),
+  [_GAME] = LAYOUT(
+                 KC_P,     KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,     
+                 KC_H,     KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_BTN1, KC_BTN2, KC_K,    KC_L,     
+                 KC_J,     KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_WH_U, KC_WH_D, KC_N,    KC_M,    
+                 CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE, KC_VOLD, KC_MUTE, KC_VOLU,
+                 QK_REP,   KC_SPC,  KC_LCTL, KC_LGUI, KC_APP,  KC_LALT, KC_LSFT, MO(_GNUM)
+                    ),
 };

@@ -18,5 +18,5 @@ COMB(isrt_tab_combo, KC_TAB, UK_D, UK_J)
 COMB(sym_tab_combo, KC_TAB, UK_RBRC, UK_HASH)
 
 
-COMB(ekey_new_combo, DF(_a1), UK_I, UK_S, UK_R, UK_T)
-COMB(ekey_reset_combo, DF(_ISRT), LT(_num, UK_I), LT(_sym2, UK_S), LT(_sym1, UK_R), LT(_sys, UK_T))
+COMB(ekey_new_combo, DF(_GAME), UK_I, UK_S, UK_R, UK_T)
+COMB(ekey_reset_combo, DF(_ISRT), UK_H, UK_A, UK_S, UK_D)
