@@ -11,26 +11,17 @@
 
 // Trackball enable / config
 #define PMW33XX_CS_PIN GP17
-// #define POINTING_DEVICE_MOTION_PIN GP21
-#define POINTING_DEVICE_COMBINED
+#define POINTING_DEVICE_LEFT
 #define SPLIT_POINTING_ENABLE
 #define POINTING_DEVICE_TASK_THROTTLE_MS 1
 #define POINTING_DEVICE_INVERT_X
 #define POINTING_DEVICE_INVERT_X_RIGHT
 
-// Caps word
-//#define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
-
 // Tap hold config
 #define TAPPING_TERM 200
-#define IGNORE_MOD_TAP_INTERRUPT // Fix for mod tap rollover
 
-// Used for program reset combo
 /* #define COMBO_COUNT 68 */
 #define COMBO_VARIABLE_LEN
 #define EXTRA_EXTRA_LONG_COMBOS
 #define COMBO_TERM 100
 //#define COMBO_NO_TIMER
-
-// Usb fix
-#define USB_MAX_POWER_CONSUMPTION 500

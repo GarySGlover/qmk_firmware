@@ -1,14 +1,12 @@
 #include QMK_KEYBOARD_H
 #include <keymap_uk.h>
 #include <math.h>
-#include "features/repeat_key.h"
 
 enum custom_keycodes {
   CL_CPI_INCREASE = SAFE_RANGE,
   CL_CPI_DECREASE,
   CL_CPI_RESET,
   CL_CLEAR_LAYERS,
-  CL_REPEAT,
   CL_MOD_LOCK,
 };
 
@@ -24,24 +22,12 @@ enum custom_layers {
 
 #include "g/keymap_combo.h"
 
-typedef struct {
-    uint16_t tap;
-    uint16_t hold;
-    uint16_t held;
-} tap_dance_tap_hold_t;
-
-enum {
-    TD_SPACE_MODLOCK,
-    TD_SHIFT_MOUSE,
-};
-
 static const char * const custom_layer_names[] = {
   [_ISRT] = "ISRT",
   [_NUM] = "Num",
   [_NAV] = "Nav",
-  [_MOUSE] = "Mouse",
-  [_DEBUG] = "Debug",
   [_SYM] = "Sym",
+  [_MOUSE] = "Mouse",
 };
 
 #ifdef OLED_ENABLE
@@ -79,42 +65,27 @@ bool oled_task_user(void) {
 int pointing_speed = 1600;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  if (!process_repeat_key(keycode, record, CL_REPEAT)) { return false; }
-  tap_dance_action_t *action;
-
   switch (keycode) {
-  case TD(TD_SPACE_MODLOCK):
-    action = &tap_dance_actions[TD_INDEX(keycode)];
-    if (!record->event.pressed && action->state.count && !action->state.finished) {
-      tap_dance_tap_hold_t *tap_hold = (tap_dance_tap_hold_t *)action->user_data;
-      tap_code16(tap_hold->tap);
-    }
-    break;
   case CL_CPI_DECREASE:
     if (record->event.pressed) {
       if (pointing_speed > 800) {
-        pointing_speed -= 800;
-        pointing_device_set_cpi_on_side(true, pointing_speed);
+        pointing_speed -= 400;
+        pointing_device_set_cpi(pointing_speed);
       }
     }
     return false;
   case CL_CPI_INCREASE:
     if (record->event.pressed) {
       if (pointing_speed < 12800) {
-        pointing_speed += 800;
-        pointing_device_set_cpi_on_side(true, pointing_speed);
+        pointing_speed += 400;
+        pointing_device_set_cpi(pointing_speed);
       }
     }
     return false;
   case CL_CPI_RESET:
     if (record->event.pressed) {
       pointing_speed = 1600;
-      pointing_device_set_cpi_on_side(true, pointing_speed);
-    }
-    return false;
-  case CL_CLEAR_LAYERS:
-    if (record->event.pressed) {
-      layer_clear();
+      pointing_device_set_cpi(pointing_speed);
     }
     return false;
   }
@@ -123,131 +94,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void keyboard_post_init_user(void) {
-    pointing_device_set_cpi_on_side(true, pointing_speed);
-    pointing_device_set_cpi_on_side(false, 1000);
+  pointing_device_set_cpi(pointing_speed);
 }
-
-report_mouse_t pointing_device_task_combined_user(report_mouse_t left_report, report_mouse_t right_report) {
-    right_report.h = right_report.x * 0.2;
-    right_report.v = right_report.y * 0.2;
-    right_report.x = 0;
-    right_report.y = 0;
-
-    float magnitude = sqrtf( left_report.x * left_report.x + left_report.y * left_report.y ) * 0.8;
-    //float adjusted_magnitude = powf(magnitude, 1.2f);
-    if (left_report.x > 0 ) {
-      left_report.x = MAX((int16_t)(left_report.x * magnitude), left_report.x);
-    } else {
-      left_report.x = MIN((int16_t)(left_report.x * magnitude), left_report.x);
-    }
-
-    if (left_report.y > 0) {
-      left_report.y = MAX((int16_t)(left_report.y * magnitude), left_report.y);
-    } else {
-      left_report.y = MIN((int16_t)(left_report.y * magnitude), left_report.y);
-    }
-
-    return pointing_device_combine_reports(left_report, right_report);
-}
-
-void tap_dance_tap_hold_finished(tap_dance_state_t *state, void *user_data) {
-    tap_dance_tap_hold_t *tap_hold = (tap_dance_tap_hold_t *)user_data;
-
-    if (state->pressed) {
-        if (state->count == 1
-#ifndef PERMISSIVE_HOLD
-            && !state->interrupted
-#endif
-        ) {
-            register_code16(tap_hold->hold);
-            tap_hold->held = tap_hold->hold;
-        } else {
-            register_code16(tap_hold->tap);
-            tap_hold->held = tap_hold->tap;
-        }
-    }
-}
-
-void tap_dance_tap_hold_reset(tap_dance_state_t *state, void *user_data) {
-    tap_dance_tap_hold_t *tap_hold = (tap_dance_tap_hold_t *)user_data;
-
-    if (tap_hold->held) {
-        unregister_code16(tap_hold->held);
-        tap_hold->held = 0;
-    }
-}
-
-#define ACTION_TAP_DANCE_TAP_HOLD(tap, hold) \
-    { .fn = {NULL, tap_dance_tap_hold_finished, tap_dance_tap_hold_reset}, .user_data = (void *)&((tap_dance_tap_hold_t){tap, hold, 0}), }
-
-
-// Define a type containing as many tapdance states as you need
-typedef enum {
-    TD_NONE,
-    TD_UNKNOWN,
-    TD_SINGLE_TAP,
-    TD_SINGLE_HOLD,
-    TD_DOUBLE_TAP,
-    TD_DOUBLE_HOLD,
-} td_state_t;
-
-static td_state_t td_state;
-
-// Determine the tapdance state to return
-td_state_t cur_dance(tap_dance_state_t *state) {
-    if (state->count == 1) {
-        if (state->interrupted || !state->pressed) return TD_SINGLE_TAP;
-        else return TD_SINGLE_HOLD;
-    } else if (state->count == 2) {
-        if (state->interrupted || !state->pressed) return TD_DOUBLE_TAP;
-        else return TD_DOUBLE_HOLD;
-    }
-    else return TD_UNKNOWN; // Any number higher than the maximum state value you return above
-}
-
-// Handle the possible states for each tapdance keycode you define:
-void shiftmouse_finished(tap_dance_state_t *state, void *user_data) {
-    td_state = cur_dance(state);
-    switch (td_state) {
-    case TD_SINGLE_TAP:
-      if(get_oneshot_mods() && MOD_BIT(KC_LSFT)) {
-        clear_oneshot_mods();
-      } else {
-        set_oneshot_mods(MOD_BIT(KC_LSFT));
-      }
-      break;
-    case TD_SINGLE_HOLD:
-      layer_on(_MOUSE);
-      break;
-    case TD_DOUBLE_TAP:
-      caps_word_toggle();
-      break;
-    case TD_DOUBLE_HOLD:
-      register_mods(MOD_BIT(KC_LSFT));
-      break;
-    default:
-      break;
-    }
-}
-
-void shiftmouse_reset(tap_dance_state_t *state, void *user_data) {
-    switch (td_state) {
-    case TD_SINGLE_HOLD:
-      layer_off(_MOUSE);
-      break;
-    case TD_DOUBLE_HOLD:
-      unregister_mods(MOD_BIT(KC_LSFT));
-    default:
-      break;
-    }
-}
-
-tap_dance_action_t tap_dance_actions[] = {
-  [TD_SPACE_MODLOCK] = ACTION_TAP_DANCE_TAP_HOLD(KC_SPC, CL_MOD_LOCK),
-  [TD_SHIFT_MOUSE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, shiftmouse_finished, shiftmouse_reset),
-};
-
-
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ISRT] = LAYOUT(
@@ -255,14 +103,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                    UK_I, UK_S, UK_R, UK_T, UK_G, UK_P, UK_N, UK_E, UK_A, UK_O,
                    UK_Q, UK_V, UK_W, UK_D, UK_J, UK_B, UK_H, UK_SLSH, UK_DOT, UK_X,
                    CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE, KC_VOLD, KC_MUTE, KC_VOLU,
-                   CL_REPEAT, KC_SPC, OSM(MOD_LCTL), KC_LGUI, KC_APP, OSM(MOD_LALT), OSM(MOD_LSFT), MO(_MOUSE)
-                   ),
-  [_ISRT_PLAIN] = LAYOUT(
-                   UK_Y, UK_C, UK_L, UK_M, UK_K, UK_Z, UK_F, UK_U, UK_COMM, UK_QUOT,
-                   UK_I, UK_S, UK_R, UK_T, UK_G, UK_P, UK_N, UK_E, UK_A, UK_O,
-                   UK_Q, UK_V, UK_W, UK_D, UK_J,  UK_B, UK_H, UK_SLSH, UK_DOT, UK_X,
-                   CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE, KC_VOLD, KC_MUTE, KC_VOLU,
-                   KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8
+                   QK_REPEAT_KEY, KC_SPC, KC_LCTL, KC_LGUI, KC_APP, KC_LALT, KC_LSFT, LT(_MOUSE, KC_BSPC)
                    ),
   [_NUM] = LAYOUT(
                   XXXXXXX, KC_F9, KC_F8, KC_F9, KC_F10, UK_PLUS, UK_7, UK_8, UK_9, UK_SLSH,
@@ -289,13 +130,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                     KC_NO, KC_NO, KC_WH_U, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
                     KC_NO, KC_WH_L, KC_WH_D, KC_WH_R, KC_NO, KC_BTN5, KC_BTN1, KC_BTN2, KC_BTN3, KC_BTN4,
                     KC_NO,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_MS_U, KC_MS_L, KC_MS_R, KC_MS_D,
-                    _______, _______, _______, _______, _______, _______,
-                    _______, _______, _______, _______, _______, _______, _______, _______
-                    ),
-  [_DEBUG] = LAYOUT(
-                    QK_BOOT, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, QK_BOOT,
-                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
                     _______, _______, _______, _______, _______, _______,
                     _______, _______, _______, _______, _______, _______, _______, _______
                     )

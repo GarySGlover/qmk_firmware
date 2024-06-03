@@ -1,31 +1,14 @@
-COMBO_REF_LAYER(_NUM, _ISRT)
+COMB(num_hold_l_combo, MO(_NUM), UK_M, UK_T)
+COMB(num_hold_r_combo, MO(_NUM), UK_F, UK_N)
+COMB(nav_hold_l_combo, MO(_NAV), UK_L, UK_R)
+COMB(nav_hold_r_combo, MO(_NAV), UK_E, UK_U)
+COMB(sym_hold_l_combo, MO(_SYM), UK_C, UK_S)
+COMB(sym_hold_r_combo, MO(_SYM), UK_COMM, UK_A)
 
-COMB(isrt_num_hold_l_combo, MO(_NUM), UK_M, UK_T)
-COMB(isrt_num_hold_r_combo, MO(_NUM), UK_F, UK_N)
-COMB(isrt_nav_hold_l_combo, MO(_NAV), UK_L, UK_R)
-COMB(isrt_nav_hold_r_combo, MO(_NAV), UK_E, UK_U)
-COMB(isrt_sym_hold_l_combo, MO(_SYM), UK_C, UK_S)
-COMB(isrt_sym_hold_r_combo, MO(_SYM), UK_COMM, UK_A)
+COMB(lboot, QK_BOOT, CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE)
+COMB(rboot, QK_BOOT, KC_VOLD, KC_MUTE, KC_VOLU)
 
-COMB(isrt_lboot, QK_BOOT, CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE)
-COMB(isrt_rboot, QK_BOOT, KC_VOLD, KC_MUTE, KC_VOLU)
-
-
-COMB(isrt_delete_combo, KC_BSPC, UK_P, UK_N)
-COMB(sym_delete_combo, KC_BSPC, UK_EQL, KC_DLR)
-COMB(isrt_escape_combo, KC_ESC, UK_B, UK_H)
-COMB(sym_escape_combo, KC_ESC, UK_MINS, KC_EXLM)
-COMB(isrt_enter_combo, KC_ENT, UK_T, UK_G)
-COMB(sym_enter_combo, KC_ENT, UK_RPRN, UK_UNDS)
-COMB(isrt_tab_combo, KC_TAB, UK_D, UK_J)
-COMB(sym_tab_combo, KC_TAB, UK_RBRC, UK_HASH)
-
-
-SUBS(sym_blocks_paren, "()"SS_TAP(X_LEFT), UK_LPRN, UK_RPRN)
-SUBS(sym_blocks_curly_braces, "{}"SS_TAP(X_LEFT), UK_LCBR, UK_RCBR)
-SUBS(sym_blocks_square_brackets, "[]"SS_TAP(X_LEFT), UK_LBRC, UK_RBRC)
-SUBS(isrt_blocks_angle_brackets, "<>"SS_TAP(X_LEFT), UK_DOT, UK_X)
-SUBS(isrt_blocks_qoutes, "''"SS_TAP(X_LEFT), UK_COMM, UK_QUOT)
-SUBS(sym_blocks_double_quotes, "\"\""SS_TAP(X_LEFT), KC_EXLM, UK_DQUO)
-SUBS(sym_blocks_graves, "()"SS_TAP(X_LEFT), UK_GRV, UK_SCLN)
-
+COMB(delete_combo, KC_BSPC, UK_P, UK_N)
+COMB(escape_combo, KC_ESC, UK_B, UK_H)
+COMB(enter_combo, KC_ENT, UK_T, UK_G)
+COMB(tab_combo, KC_TAB, UK_D, UK_J)
