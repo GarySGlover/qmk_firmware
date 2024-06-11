@@ -12,14 +12,15 @@ enum custom_keycodes {
 
 enum custom_layers {
   _ISRT,
-  _ISRT_PLAIN,
   _NUM,
   _NAV,
   _MOUSE,
-  _DEBUG,
+  _SHORT,
+  _SHORT2,
   _SYM,
 };
 
+// http://combos.gboards.ca/docs/install/
 #include "g/keymap_combo.h"
 
 static const char * const custom_layer_names[] = {
@@ -28,6 +29,8 @@ static const char * const custom_layer_names[] = {
   [_NAV] = "Nav",
   [_SYM] = "Sym",
   [_MOUSE] = "Mouse",
+  [_SHORT] = "Shorts",
+  [_SHORT2] = "2Shorts",
 };
 
 #ifdef OLED_ENABLE
@@ -64,33 +67,45 @@ bool oled_task_user(void) {
 
 int pointing_speed = 1600;
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-  case CL_CPI_DECREASE:
-    if (record->event.pressed) {
-      if (pointing_speed > 800) {
-        pointing_speed -= 400;
-        pointing_device_set_cpi(pointing_speed);
-      }
-    }
-    return false;
-  case CL_CPI_INCREASE:
-    if (record->event.pressed) {
-      if (pointing_speed < 12800) {
-        pointing_speed += 400;
-        pointing_device_set_cpi(pointing_speed);
-      }
-    }
-    return false;
-  case CL_CPI_RESET:
-    if (record->event.pressed) {
-      pointing_speed = 1600;
-      pointing_device_set_cpi(pointing_speed);
-    }
-    return false;
-  }
+#define TAP_CASE(keycode, tap_keycode) \
+    case keycode: \
+        if (record->tap.count && record->event.pressed) { \
+            tap_code16(tap_keycode); \
+            return false; \
+        } \
+        break;
 
-  return true;
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case CL_CPI_DECREASE:
+            if (record->event.pressed) {
+                if (pointing_speed > 800) {
+                    pointing_speed -= 400;
+                    pointing_device_set_cpi(pointing_speed);
+                }
+            }
+            return false;
+        case CL_CPI_INCREASE:
+            if (record->event.pressed) {
+                if (pointing_speed < 12800) {
+                    pointing_speed += 400;
+                    pointing_device_set_cpi(pointing_speed);
+                }
+            }
+            return false;
+        case CL_CPI_RESET:
+            if (record->event.pressed) {
+                pointing_speed = 1600;
+                pointing_device_set_cpi(pointing_speed);
+            }
+            return false;
+
+            TAP_CASE(LCTL_T(KC_EXLM), KC_EXLM)
+            TAP_CASE(LALT_T(UK_DQUO), UK_DQUO)
+            TAP_CASE(LGUI_T(UK_PND), UK_PND)
+    }
+
+    return true;
 }
 
 void keyboard_post_init_user(void) {
@@ -101,21 +116,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ISRT] = LAYOUT(
                    UK_Y, UK_C, UK_L, UK_M, UK_K, UK_Z,  UK_F, UK_U, UK_COMM, UK_QUOT,
                    UK_I, UK_S, UK_R, UK_T, UK_G, UK_P, UK_N, UK_E, UK_A, UK_O,
-                   UK_Q, UK_V, UK_W, UK_D, UK_J, UK_B, UK_H, UK_SLSH, UK_DOT, UK_X,
+                   RALT_T(UK_Q), LGUI_T(UK_V), LALT_T(UK_W), LCTL_T(UK_D), UK_J, UK_B, LCTL_T(UK_H), LALT_T(UK_SLSH), LGUI_T(UK_DOT), RALT_T(UK_X),
                    CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE, KC_VOLD, KC_MUTE, KC_VOLU,
-                   QK_REPEAT_KEY, KC_SPC, KC_LCTL, KC_LGUI, KC_APP, KC_LALT, KC_LSFT, LT(_MOUSE, KC_BSPC)
+                   QK_REPEAT_KEY, LT(_NUM, KC_SPC), LT(_SYM, KC_ENT), LT(_SHORT, KC_ESC), LT(_SHORT2, KC_DEL), LT(_NAV, KC_TAB), KC_LSFT, LT(_MOUSE, KC_BSPC)
                    ),
   [_NUM] = LAYOUT(
                   XXXXXXX, KC_F9, KC_F8, KC_F9, KC_F10, UK_PLUS, UK_7, UK_8, UK_9, UK_SLSH,
                   XXXXXXX, KC_F6, KC_F5, KC_F4, KC_F11, UK_EQL, UK_4, UK_5, UK_6, UK_0,
-                  XXXXXXX, KC_F3, KC_F2, KC_F1, KC_F12, UK_MINS, UK_1, UK_2, UK_3, UK_ASTR,
+                  KC_LGUI, LGUI_T(KC_F3), LALT_T(KC_F2), LCTL_T(KC_F1), KC_F12, UK_MINS, LCTL_T(UK_1), LALT_T(UK_2), LGUI_T(UK_3), RALT_T(UK_ASTR),
                   _______, _______, _______, _______, _______, _______,
                   _______, _______, _______, _______, _______, _______, _______, _______
                   ),
   [_SYM] = LAYOUT(
                   UK_GRV, UK_SCLN, UK_LCBR, UK_RCBR, UK_COLN, UK_PLUS, KC_AMPR, XXXXXXX, XXXXXXX, UK_SLSH,
                   UK_TILD, UK_BSLS, UK_LPRN, UK_RPRN, UK_UNDS, UK_EQL, KC_DLR, KC_PERC, KC_CIRC, XXXXXXX,
-                  UK_NOT, UK_PIPE, UK_LBRC, UK_RBRC, UK_HASH, UK_MINS, KC_EXLM, UK_DQUO, UK_PND, UK_ASTR,
+                  RALT_T(UK_NOT), LGUI_T(UK_PIPE), LALT_T(UK_LBRC), LCTL_T(UK_RBRC), UK_HASH, UK_MINS, LCTL_T(KC_EXLM), LALT_T(UK_DQUO), LGUI_T(UK_PND), RALT_T(UK_ASTR),
                   _______, _______, _______, _______, _______, _______,
                   _______, _______, _______, _______, _______, _______, _______, _______
                   ),
@@ -132,5 +147,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                     KC_NO,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_MS_U, KC_MS_L, KC_MS_R, KC_MS_D,
                     _______, _______, _______, _______, _______, _______,
                     _______, _______, _______, _______, _______, _______, _______, _______
+                    ),
+    [_SHORT] = LAYOUT(
+                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+                    KC_NO,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO
+                    ),
+    [_SHORT] = LAYOUT(
+                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+                    KC_NO,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO
                     )
 };

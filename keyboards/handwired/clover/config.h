@@ -18,7 +18,8 @@
 #define POINTING_DEVICE_INVERT_X_RIGHT
 
 // Tap hold config
-#define TAPPING_TERM 200
+#define TAPPING_TERM 250
+#define PERMISSIVE_HOLD
 
 /* #define COMBO_COUNT 68 */
 #define COMBO_VARIABLE_LEN
