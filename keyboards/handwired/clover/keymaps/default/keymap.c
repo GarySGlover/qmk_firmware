@@ -1,6 +1,7 @@
 #include QMK_KEYBOARD_H
 #include <keymap_uk.h>
 #include <math.h>
+#include "process_dynamic_tapping_term.h"
 
 enum custom_keycodes {
   CL_CPI_INCREASE = SAFE_RANGE,
@@ -8,6 +9,14 @@ enum custom_keycodes {
   CL_CPI_RESET,
   CL_CLEAR_LAYERS,
   CL_MOD_LOCK,
+  MT_NOT,
+  MT_PIPE,
+  MT_LBRC,
+  MT_RBRC,
+  MT_EXLM,
+  MT_DQUO,
+  MT_PND,
+  MT_ASTR
 };
 
 enum custom_layers {
@@ -41,22 +50,30 @@ static void render_logo(void) {
     0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF, 0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0x00
   };
 
+
   oled_write_P(qmk_logo, false);
 }
 
 bool oled_task_user(void) {
   if (is_keyboard_master()) {
-    oled_write_P(PSTR("Layer: "), false);
-    oled_write_P(PSTR(custom_layer_names[get_highest_layer(layer_state)]), false);
-    oled_write_P(PSTR("\n"), false);
+    /* oled_write_ln_P(PSTR("Clover Board"), false); */
+    oled_write_ln_P(PSTR(custom_layer_names[get_highest_layer(layer_state)]), false);
 
+    // Mouse DPI
     char master_cpi[5];
     utoa(pointing_device_get_cpi(), master_cpi, 10);
-    oled_write_P(PSTR("LM: "), false);
+    oled_write_P(PSTR("DPI: "), false);
     oled_write_P(PSTR(master_cpi), false);
-    oled_write_P(PSTR(" RM: "), false);
 
-    oled_write_P(PSTR("\n"), false);
+    // Tapping term
+    oled_write_P(PSTR("  TT: "), false);
+    oled_write_ln_P(get_u16_str(GET_TAPPING_TERM(KC_TRANSPARENT, &{0}), ' '), false);
+
+    // Host Keyboard LED Status
+    led_t led_state = host_keyboard_led_state();
+    oled_write_P(led_state.num_lock ? PSTR("NUM ") : PSTR("    "), false);
+    oled_write_P(led_state.caps_lock ? PSTR("CAP ") : PSTR("    "), false);
+    oled_write_P(led_state.scroll_lock ? PSTR("SCR ") : PSTR("    "), false);
   } else {
     render_logo();
   }
@@ -100,9 +117,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
 
-            TAP_CASE(LCTL_T(KC_EXLM), KC_EXLM)
-            TAP_CASE(LALT_T(UK_DQUO), UK_DQUO)
-            TAP_CASE(LGUI_T(UK_PND), UK_PND)
+          TAP_CASE(RALT_T(MT_NOT), UK_NOT)
+          TAP_CASE(LGUI_T(MT_PIPE), KC_PIPE)
+          TAP_CASE(LALT_T(MT_LBRC), KC_LBRC)
+          TAP_CASE(LCTL_T(MT_RBRC), KC_RBRC)
+          TAP_CASE(LCTL_T(MT_EXLM), KC_EXLM)
+          TAP_CASE(LALT_T(MT_DQUO), KC_DQUO)
+          TAP_CASE(LGUI_T(MT_PND), UK_PND)
+          TAP_CASE(RALT_T(MT_ASTR), KC_ASTR)
     }
 
     return true;
@@ -130,7 +152,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_SYM] = LAYOUT(
                   UK_GRV, UK_SCLN, UK_LCBR, UK_RCBR, UK_COLN, UK_PLUS, KC_AMPR, XXXXXXX, XXXXXXX, UK_SLSH,
                   UK_TILD, UK_BSLS, UK_LPRN, UK_RPRN, UK_UNDS, UK_EQL, KC_DLR, KC_PERC, KC_CIRC, XXXXXXX,
-                  RALT_T(UK_NOT), LGUI_T(UK_PIPE), LALT_T(UK_LBRC), LCTL_T(UK_RBRC), UK_HASH, UK_MINS, LCTL_T(KC_EXLM), LALT_T(UK_DQUO), LGUI_T(UK_PND), RALT_T(UK_ASTR),
+                  RALT_T(MT_NOT), LGUI_T(MT_PIPE), LALT_T(MT_LBRC), LCTL_T(MT_RBRC), UK_HASH, UK_MINS, LCTL_T(MT_EXLM), LALT_T(MT_DQUO), LGUI_T(MT_PND), RALT_T(MT_ASTR),
                   _______, _______, _______, _______, _______, _______,
                   _______, _______, _______, _______, _______, _______, _______, _______
                   ),
@@ -138,7 +160,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                   KC_NO, KC_NO, KC_UP, KC_HOME, KC_NO, KC_NO, KC_PGUP, KC_NO, KC_NO, KC_NO,
                   KC_NO, KC_LEFT, KC_DOWN, KC_RGHT, KC_TAB, KC_NO, KC_LEFT, KC_UP, KC_DOWN, KC_RGHT,
                   KC_NO, KC_NO, KC_NO, KC_END, _______, _______, KC_PGDN, KC_NO, KC_NO, KC_NO,
-                  _______, _______, _______, _______, _______, _______,
+                  DT_DOWN, _______, DT_UP, _______, _______, _______,
                   _______, _______, _______, _______, _______, _______, _______, _______
                   ),
   [_MOUSE] = LAYOUT(
@@ -148,14 +170,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                     _______, _______, _______, _______, _______, _______,
                     _______, _______, _______, _______, _______, _______, _______, _______
                     ),
-    [_SHORT] = LAYOUT(
+  [_SHORT] = LAYOUT(
                     KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
                     KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
                     KC_NO,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
                     KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
                     KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO
                     ),
-    [_SHORT] = LAYOUT(
+  [_SHORT] = LAYOUT(
                     KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
                     KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
                     KC_NO,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
