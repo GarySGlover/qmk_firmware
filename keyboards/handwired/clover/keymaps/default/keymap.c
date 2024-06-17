@@ -12,12 +12,12 @@ enum custom_keycodes {
 
 enum custom_layers {
   _ISRT,
-  _NUM,
   _NAV,
   _MOUSE,
   _SHORT,
   _SHORT2,
   _SYM,
+  _NUM,
 };
 
 // http://combos.gboards.ca/docs/install/
@@ -67,14 +67,6 @@ bool oled_task_user(void) {
 
 int pointing_speed = 1600;
 
-#define TAP_CASE(keycode, tap_keycode) \
-    case keycode: \
-        if (record->tap.count && record->event.pressed) { \
-            tap_code16(tap_keycode); \
-            return false; \
-        } \
-        break;
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case CL_CPI_DECREASE:
@@ -99,10 +91,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 pointing_device_set_cpi(pointing_speed);
             }
             return false;
-
-            TAP_CASE(LCTL_T(KC_EXLM), KC_EXLM)
-            TAP_CASE(LALT_T(UK_DQUO), UK_DQUO)
-            TAP_CASE(LGUI_T(UK_PND), UK_PND)
     }
 
     return true;
@@ -116,50 +104,50 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ISRT] = LAYOUT(
                    UK_Y, UK_C, UK_L, UK_M, UK_K, UK_Z,  UK_F, UK_U, UK_COMM, UK_QUOT,
                    UK_I, UK_S, UK_R, UK_T, UK_G, UK_P, UK_N, UK_E, UK_A, UK_O,
-                   RALT_T(UK_Q), LGUI_T(UK_V), LALT_T(UK_W), LCTL_T(UK_D), UK_J, UK_B, LCTL_T(UK_H), LALT_T(UK_SLSH), LGUI_T(UK_DOT), RALT_T(UK_X),
+                   UK_Q, UK_V, UK_W, UK_D, UK_J, UK_B, UK_H, UK_SCLN, UK_DOT, UK_X,
                    CL_CPI_DECREASE, CL_CPI_RESET, CL_CPI_INCREASE, KC_VOLD, KC_MUTE, KC_VOLU,
-                   QK_REPEAT_KEY, LT(_NUM, KC_SPC), LT(_SYM, KC_ENT), LT(_SHORT, KC_ESC), LT(_SHORT2, KC_DEL), LT(_NAV, KC_TAB), KC_LSFT, LT(_MOUSE, KC_BSPC)
+                   QK_REPEAT_KEY, KC_SPC, MO(_SYM), MO(_SHORT), MO(_SHORT2), MO(_NAV), KC_LSFT, LT(_MOUSE, KC_BSPC)
                    ),
   [_NUM] = LAYOUT(
-                  XXXXXXX, KC_F9, KC_F8, KC_F9, KC_F10, UK_PLUS, UK_7, UK_8, UK_9, UK_SLSH,
-                  XXXXXXX, KC_F6, KC_F5, KC_F4, KC_F11, UK_EQL, UK_4, UK_5, UK_6, UK_0,
-                  KC_LGUI, LGUI_T(KC_F3), LALT_T(KC_F2), LCTL_T(KC_F1), KC_F12, UK_MINS, LCTL_T(UK_1), LALT_T(UK_2), LGUI_T(UK_3), RALT_T(UK_ASTR),
+                  UK_7, UK_5, UK_3, UK_1, UK_9, UK_8, UK_0, UK_2, UK_4, UK_6,
+                  KC_APP, KC_LCTL, KC_LALT, KC_LCMD, KC_F11, KC_F12, KC_LCMD, KC_LALT, KC_LCTL, XXXXXXX,
+                  KC_F7, KC_F5, KC_F3, KC_F1, KC_F9, KC_F8, KC_F10, KC_F2, KC_F4, KC_F6,
                   _______, _______, _______, _______, _______, _______,
                   _______, _______, _______, _______, _______, _______, _______, _______
                   ),
   [_SYM] = LAYOUT(
-                  UK_GRV, UK_SCLN, UK_LCBR, UK_RCBR, UK_COLN, UK_PLUS, KC_AMPR, XXXXXXX, XXXXXXX, UK_SLSH,
-                  UK_TILD, UK_BSLS, UK_LPRN, UK_RPRN, UK_UNDS, UK_EQL, KC_DLR, KC_PERC, KC_CIRC, XXXXXXX,
-                  RALT_T(UK_NOT), LGUI_T(UK_PIPE), LALT_T(UK_LBRC), LCTL_T(UK_RBRC), UK_HASH, UK_MINS, LCTL_T(KC_EXLM), LALT_T(UK_DQUO), LGUI_T(UK_PND), RALT_T(UK_ASTR),
+                  KC_ESC, UK_LBRC, UK_LCBR, UK_LPRN, UK_TILD, UK_CIRC, UK_RPRN, UK_RCBR, UK_RBRC, UK_GRV,
+                  UK_MINS, UK_ASTR, UK_EQL, UK_UNDS, UK_DLR, UK_HASH, KC_LCMD, KC_LALT, KC_LCTL, XXXXXXX,
+                  UK_PLUS, UK_PIPE, UK_AT, UK_SLSH, UK_PERC, XXXXXXX, UK_BSLS, UK_AMPR, UK_QUES, UK_EXLM,
                   _______, _______, _______, _______, _______, _______,
-                  _______, _______, _______, _______, _______, _______, _______, _______
+                  _______, _______, MO(_NUM), _______, _______, MO(_NUM), _______, _______
                   ),
   [_NAV] = LAYOUT(
-                  KC_NO, KC_NO, KC_UP, KC_HOME, KC_NO, KC_NO, KC_PGUP, KC_NO, KC_NO, KC_NO,
-                  KC_NO, KC_LEFT, KC_DOWN, KC_RGHT, KC_TAB, KC_NO, KC_LEFT, KC_UP, KC_DOWN, KC_RGHT,
-                  KC_NO, KC_NO, KC_NO, KC_END, _______, _______, KC_PGDN, KC_NO, KC_NO, KC_NO,
+                  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_DEL, KC_HOME, KC_UP, KC_END, XXXXXXX,
+                  KC_APP, KC_LCTL, KC_LALT, KC_LCMD, XXXXXXX, KC_ENT, KC_LEFT, KC_DOWN, KC_RGHT, XXXXXXX,
+                  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_TAB, KC_PGDN, KC_PGUP, XXXXXXX, XXXXXXX,
                   _______, _______, _______, _______, _______, _______,
-                  _______, _______, _______, _______, _______, _______, _______, _______
+                  _______, _______, MO(_NUM), _______, _______, MO(_NUM), _______, _______
                   ),
   [_MOUSE] = LAYOUT(
-                    KC_NO, KC_NO, KC_WH_U, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                    KC_NO, KC_WH_L, KC_WH_D, KC_WH_R, KC_NO, KC_BTN5, KC_BTN1, KC_BTN2, KC_BTN3, KC_BTN4,
-                    KC_NO,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_MS_U, KC_MS_L, KC_MS_R, KC_MS_D,
+                    XXXXXXX, XXXXXXX, KC_WH_U, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                    XXXXXXX, KC_WH_L, KC_WH_D, KC_WH_R, XXXXXXX, KC_BTN5, KC_BTN1, KC_BTN2, KC_BTN3, KC_BTN4,
+                    XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_MS_U, KC_MS_L, KC_MS_R, KC_MS_D,
                     _______, _______, _______, _______, _______, _______,
                     _______, _______, _______, _______, _______, _______, _______, _______
                     ),
     [_SHORT] = LAYOUT(
-                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                    KC_NO,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO
+                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                    XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
                     ),
     [_SHORT] = LAYOUT(
-                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                    KC_NO,  KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-                    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO
+                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                    XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
                     )
 };
