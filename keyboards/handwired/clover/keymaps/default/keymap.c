@@ -118,7 +118,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_SYM] = LAYOUT(
                   KC_ESC, UK_LBRC, UK_LCBR, UK_LPRN, UK_TILD, UK_CIRC, UK_RPRN, UK_RCBR, UK_RBRC, UK_GRV,
                   UK_MINS, UK_ASTR, UK_EQL, UK_UNDS, UK_DLR, UK_HASH, KC_LCMD, KC_LALT, KC_LCTL, XXXXXXX,
-                  UK_PLUS, UK_PIPE, UK_AT, UK_SLSH, UK_PERC, XXXXXXX, UK_BSLS, UK_AMPR, UK_QUES, UK_EXLM,
+                  UK_PLUS, UK_PIPE, UK_AT, UK_SLSH, UK_PERC, UK_DQUO, UK_BSLS, UK_AMPR, UK_QUES, UK_EXLM,
                   _______, _______, _______, _______, _______, _______,
                   _______, _______, MO(_NUM), _______, _______, MO(_NUM), _______, _______
                   ),
