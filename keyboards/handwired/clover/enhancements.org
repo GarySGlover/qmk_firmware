@@ -1,0 +1,3 @@
+* Useful shortcuts
+- Shift + Enter (Useful in forms like google chat for next line rather than send)
+  
